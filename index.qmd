@@ -1,0 +1,81 @@
+---
+title: "Hands-on Survival Analysis with an Anonymized Thyroid Cancer Dataset"
+description: "익명화된 자료로 연습하기"
+author: "RPythonStudyGroup feat. ChatGPT"
+date: "2025-02-03"
+date-modified: "2025-02-03"
+categories:
+  - R
+  - Survival
+  - hands-on
+---
+
+### Surv함수
+- time과 event를 인자로 받아 특수한 형태의 matrix인 생존(survival) 객체 반환
+
+```{r rotterdam}
+
+library(moonBook)
+library(survival)
+
+rai_recur <- readRDS("deidentified_data/rai_recur.rds")
+mytable(recur~.,data=rai_recur)
+
+
+rai_recur$recur <- as.integer(rai_recur$recur)
+km <- Surv(rai_recur$time, event = rai_recur$recur) ## default type : "right"
+str(km)
+head(km)
+```
+
+- plot() 함수는 제네릭 함수로, 기본적으로 산점도를 그리지만, Surv 객체를 인자로 받으면 내부적으로 plot.survfit() 메서드를 호출하여 Kaplan-Meier(KM) 곡선을 반환함
+```{r plot.survfit}
+
+plot(km) # plot.Surv*  ## km - Surv class (time, status) 가지고 있는 리스트
+```
+
+- **survfit 함수의 인자**로 사용되므로 중요
+
+#### ** 중앙생존시간 및 평균생존시간
+
+```{r median_mean}
+
+median(km)
+mean(km) ## Surv 객체에 대한 method 함수들이 있다.
+```
+
+### survfit함수와 객체
+- Surv 객체와 공변량을 formula 형태의 인자로 받아 Kaplan-Meier 또는 Cox 모델 기반 생존 확률을 저장한 객체를 반환
+
+```{r survfit}
+
+plot(survfit(km~1))
+km_fit <- survfit(km~rai_recur$sex)
+plot(km_fit)
+summary(km_fit)
+summary(km_fit, c(365*1:19)) ### 정해진 time에 맞는 생존테이블표를 만든다.
+
+plot(km_fit, col = rainbow(2), lty=1:2)
+legend("topright", legend = c("Female","Male"),
+col= rainbow(2), lty=1:2)
+```
+
+```{r ggsurvplot}
+
+library(survminer)
+
+ggsurvplot(
+  km_fit, 
+  data = rai_recur,
+  conf.int = T, 
+  xscale = 365.2425, ## xscale can be "d_y"
+  break.x.by = 5*365.2425,
+  pval = T, 
+  pval.size =4, 
+  surv.median.line = "hv",
+  risk.table = FALSE, ## if TRUE, risk table is displayed under graph
+  legend.title="sex", 
+  legend.labs=c("Female","Male"),
+  palette = c("#E7B800", "#2E9FDF"),
+)
+```
