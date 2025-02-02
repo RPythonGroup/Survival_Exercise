@@ -1,5 +1,5 @@
 ---
-title: "Survival Analysis with an deidentified Thyroid Cancer Dataset"
+title: "Survival Analysis with the deidentified Thyroid Cancer Dataset"
 description: "익명화된 자료로 연습하기"
 author: "RPythonStudyGroup feat. ChatGPT"
 date: "2025-02-03"
