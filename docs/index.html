@@ -253,11 +253,12 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="git-clone">git clone</h3>
 <ul>
 <li>원격저장소 HTTP url: https://github.com/RPythonGroup/Survival_Exercise.git</li>
-<li>clone 시 폴더를 지정하면 현재 폴더 하부에 지정하는 폴더명으로 clone 됨.</li>
+<li>터메널에서 git clone 시 현재 디렉토리 하부에 지정하는 디렉토리명으로 clone 됨.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/RPythonGroup/Survival_Exercise.git R441-Survival_Exercise</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li>프로젝트만들기에서 기존폴더에서 만들기에서 clone된 폴더를</li>
+<li>프로젝트만들기에서 기존 디렉토리에서 만들기에서 clone 된 디렉토리를 선택하면 됨.</li>
+<li>패키지관리를 renv로 하는 경우에는 renv::snapshot 등으로 renv.lock 파일의 패키지 목록과 일치화 시키면 바람직함.</li>
 </ul>
 </section>
 <section id="readrds" class="level3">
