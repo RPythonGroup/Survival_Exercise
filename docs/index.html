@@ -104,6 +104,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -149,7 +178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#mytable" id="toc-mytable" class="nav-link" data-scroll-target="#mytable">mytable</a></li>
   <li><a href="#surv함수" id="toc-surv함수" class="nav-link" data-scroll-target="#surv함수">Surv함수</a></li>
   <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">plot</a></li>
-  <li><a href="#중앙생존시간" id="toc-중앙생존시간" class="nav-link" data-scroll-target="#중앙생존시간">중앙생존시간</a></li>
+  <li><a href="#중앙값-생존기간" id="toc-중앙값-생존기간" class="nav-link" data-scroll-target="#중앙값-생존기간">중앙값 생존기간</a></li>
   <li><a href="#평균생존기간" id="toc-평균생존기간" class="nav-link" data-scroll-target="#평균생존기간">평균생존기간</a></li>
   <li><a href="#survfit함수와-객체" id="toc-survfit함수와-객체" class="nav-link" data-scroll-target="#survfit함수와-객체">survfit함수와 객체</a>
   <ul class="collapse">
@@ -158,7 +187,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">summary</a></li>
   <li><a href="#summary-기간지정" id="toc-summary-기간지정" class="nav-link" data-scroll-target="#summary-기간지정">summary 기간지정</a></li>
   <li><a href="#plot-그래프---범례추가" id="toc-plot-그래프---범례추가" class="nav-link" data-scroll-target="#plot-그래프---범례추가">plot 그래프 - 범례추가</a></li>
-  <li><a href="#ggplot---risk.table-추가하기" id="toc-ggplot---risk.table-추가하기" class="nav-link" data-scroll-target="#ggplot---risk.table-추가하기">ggplot - risk.table 추가하기</a></li>
+  <li><a href="#ggsurvplot---risk.table-추가하기" id="toc-ggsurvplot---risk.table-추가하기" class="nav-link" data-scroll-target="#ggsurvplot---risk.table-추가하기">ggsurvplot - risk.table 추가하기</a></li>
+  <li><a href="#cox-단변량" id="toc-cox-단변량" class="nav-link" data-scroll-target="#cox-단변량">cox 단변량</a></li>
+  <li><a href="#cox-단변량-반복" id="toc-cox-단변량-반복" class="nav-link" data-scroll-target="#cox-단변량-반복">cox 단변량 반복</a></li>
+  <li><a href="#multivariate-analysis" id="toc-multivariate-analysis" class="nav-link" data-scroll-target="#multivariate-analysis">Multivariate Analysis</a></li>
+  <li><a href="#multivariate---anova" id="toc-multivariate---anova" class="nav-link" data-scroll-target="#multivariate---anova">Multivariate - anova</a></li>
+  <li><a href="#multivariate---adjusted" id="toc-multivariate---adjusted" class="nav-link" data-scroll-target="#multivariate---adjusted">Multivariate - adjusted</a></li>
+  <li><a href="#survfit-plot" id="toc-survfit-plot" class="nav-link" data-scroll-target="#survfit-plot">survfit plot</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -216,7 +251,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="readrds" class="level3">
 <h3 class="anchored" data-anchor-id="readrds">readRDS</h3>
 <ul>
-<li>R에서만 사용하는 자료형태인 RDS를 자료형이 보전되어 빠르게 읽어옴</li>
+<li>R에서만 사용하는 자료형태인 RDS를 읽어오며, 자료형이 보전되고 빠름</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -386,8 +421,11 @@ Attaching package: 'dplyr'</code></pre>
 <li><strong>survfit 함수의 인자</strong>로 사용되므로 중요</li>
 </ul>
 </section>
-<section id="중앙생존시간" class="level3">
-<h3 class="anchored" data-anchor-id="중앙생존시간">중앙생존시간</h3>
+<section id="중앙값-생존기간" class="level3">
+<h3 class="anchored" data-anchor-id="중앙값-생존기간">중앙값 생존기간</h3>
+<ul>
+<li>50%에 도달하지 못하여 NA 반환됨</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(km)  <span class="do">## Surv 객체에 대한 method 함수들이 있다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -407,6 +445,9 @@ NA </code></pre>
 </section>
 <section id="평균생존기간" class="level3">
 <h3 class="anchored" data-anchor-id="평균생존기간">평균생존기간</h3>
+<ul>
+<li>입력이 개월이므로 재발 기간의 평귬이 이 약 6년?</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -595,8 +636,8 @@ NA </code></pre>
 </div>
 </div>
 </section>
-<section id="ggplot---risk.table-추가하기" class="level3">
-<h3 class="anchored" data-anchor-id="ggplot---risk.table-추가하기">ggplot - risk.table 추가하기</h3>
+<section id="ggsurvplot---risk.table-추가하기" class="level3">
+<h3 class="anchored" data-anchor-id="ggsurvplot---risk.table-추가하기">ggsurvplot - risk.table 추가하기</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -639,6 +680,284 @@ Median survival not reached.</code></pre>
 <div>
 <figure class="figure">
 <p><img src="index_files/figure-html/ggsurvplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cox-단변량" class="level3">
+<h3 class="anchored" data-anchor-id="cox-단변량">cox 단변량</h3>
+<p><span class="math display">\[
+h(t | X) = h_0(t) \exp(\beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p)
+\]</span> #### sex에 대한 단변량</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>univariate_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(km <span class="sc">~</span> sex, <span class="at">data =</span> rai_recur)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(univariate_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = km ~ sex, data = rai_recur)
+
+  n= 1180, number of events= 83 
+
+       coef exp(coef) se(coef)     z Pr(&gt;|z|)    
+sexM 0.8430    2.3233   0.2287 3.686 0.000228 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     exp(coef) exp(-coef) lower .95 upper .95
+sexM     2.323     0.4304     1.484     3.637
+
+Concordance= 0.58  (se = 0.027 )
+Likelihood ratio test= 12.29  on 1 df,   p=5e-04
+Wald test            = 13.59  on 1 df,   p=2e-04
+Score (logrank) test = 14.41  on 1 df,   p=1e-04</code></pre>
+</div>
+</div>
+<section id="검정-방법의-차이" class="level4">
+<h4 class="anchored" data-anchor-id="검정-방법의-차이">1️⃣ 검정 방법의 차이</h4>
+<ul>
+<li>Likelihood Ratio Test: 모델 전체의 적합도를 평가하는 강력한 검정 방법.</li>
+<li>Wald Test: 개별 회귀 계수가 0과 다른지 평가하지만, 샘플 크기가 작거나 계수가 매우 크면 부정확할 수 있음.</li>
+<li>Score Test: 작은 샘플에서도 안정적인 검정이지만, 일부 가정이 충족되지 않으면 결과가 다를 수 있음.</li>
+</ul>
+</section>
+<section id="샘플-크기-및-데이터-특성" class="level4">
+<h4 class="anchored" data-anchor-id="샘플-크기-및-데이터-특성">2️⃣ 샘플 크기 및 데이터 특성</h4>
+<ul>
+<li>샘플 크기가 작을 때 → Wald Test는 불안정할 수 있음.</li>
+<li>변수 간 다중공선성 → Wald Test와 LRT 결과가 다를 수 있음.</li>
+<li>검열 데이터 비율이 높을 때 → Score Test가 다른 두 검정과 다를 수 있음.</li>
+</ul>
+</section>
+<section id="likelihood-ratio-test만-유의미하고-나머지는-유의미하지-않다면" class="level4">
+<h4 class="anchored" data-anchor-id="likelihood-ratio-test만-유의미하고-나머지는-유의미하지-않다면"><strong>📌 (1) Likelihood Ratio Test만 유의미하고 나머지는 유의미하지 않다면?</strong></h4>
+<ul>
+<li>모델이 전체적으로는 의미가 있지만, 개별 변수의 효과가 강하지 않을 수 있음.<br>
+</li>
+<li>Wald Test와 Score Test도 확인하면서 <strong>개별 변수의 기여도를 분석</strong>해야 함.</li>
+</ul>
+</section>
+<section id="wald-test만-유의미하다면" class="level4">
+<h4 class="anchored" data-anchor-id="wald-test만-유의미하다면"><strong>📌 (2) Wald Test만 유의미하다면?</strong></h4>
+<ul>
+<li>특정 변수의 효과는 강하지만, 모델 전체가 데이터를 충분히 설명하지 못할 수 있음.<br>
+</li>
+<li>변수 선택을 다시 검토하고 다중공선성을 점검해야 함.</li>
+</ul>
+</section>
+<section id="score-test만-유의미하다면" class="level4">
+<h4 class="anchored" data-anchor-id="score-test만-유의미하다면"><strong>📌 (3) Score Test만 유의미하다면?</strong></h4>
+<ul>
+<li>데이터가 잘 맞지만, 특정 변수의 효과가 불확실할 가능성이 있음.<br>
+</li>
+<li>모델의 구조와 데이터의 분포를 다시 확인해야 함.</li>
+</ul>
+</section>
+</section>
+<section id="cox-단변량-반복" class="level3">
+<h3 class="anchored" data-anchor-id="cox-단변량-반복">cox 단변량 반복</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ mycph : perform coxph of individual expecting variables
+
+ Call: Surv(time, recur) ~ sex + surgeon + Risk + pT + gross_ETE + pN +     ENE, data= rai_recur </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     HR   lcl    ucl     p
+sexM               2.32  1.48   3.64 0.000
+surgeonGS          8.87  0.92  85.71 0.059
+surgeonKCCH        2.50  0.23  27.64 0.454
+surgeonLBC         3.88  0.47  32.25 0.209
+surgeonLGH         4.44  0.61  32.63 0.142
+surgeonLMC         3.05  0.38  24.40 0.293
+surgeonLYS        11.07  1.29  95.20 0.028
+surgeonOKK        18.73  1.67 209.73 0.017
+surgeonoutside    19.61  2.64 145.48 0.004
+surgeonSYS         3.13  0.35  28.06 0.309
+RiskIntermediate   0.39  0.25   0.62 0.000
+RiskLow            0.08  0.03   0.19 0.000
+pTT1b              2.65  1.37   5.12 0.004
+pTT2               5.63  2.77  11.42 0.000
+pTT3a              7.86  2.98  20.75 0.000
+pTT3b              4.04  1.53  10.64 0.005
+pTT4a             12.51  5.47  28.57 0.000
+pTT4b            110.48 14.15 862.67 0.000
+gross_ETEY         3.01  1.74   5.19 0.000
+pNN1a              2.89  1.40   5.96 0.004
+pNN1b              5.88  2.80  12.36 0.000
+pNNx               1.92  0.58   6.34 0.285
+ENEY               2.96  1.76   4.97 0.000</code></pre>
+</div>
+</div>
+</section>
+<section id="multivariate-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="multivariate-analysis">Multivariate Analysis</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cox_model1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk + pT + 
+    gross_ETE + pN + ENE, data = rai_recur)
+
+  n= 1180, number of events= 83 
+
+                     coef exp(coef) se(coef)      z Pr(&gt;|z|)   
+sexM              0.45143   1.57055  0.25124  1.797  0.07237 . 
+surgeonGS         1.82111   6.17873  1.17355  1.552  0.12071   
+surgeonKCCH       0.84534   2.32877  1.23979  0.682  0.49534   
+surgeonLBC        1.33518   3.80069  1.08259  1.233  0.21746   
+surgeonLGH        1.39732   4.04434  1.02052  1.369  0.17093   
+surgeonLMC        0.96762   2.63166  1.06429  0.909  0.36326   
+surgeonLYS        2.35394  10.52698  1.12773  2.087  0.03686 * 
+surgeonOKK        2.41672  11.20906  1.24459  1.942  0.05216 . 
+surgeonoutside    2.53862  12.66221  1.02984  2.465  0.01370 * 
+surgeonSYS        1.21122   3.35757  1.12605  1.076  0.28209   
+RiskIntermediate -1.10109   0.33251  0.48798 -2.256  0.02404 * 
+RiskLow          -1.94527   0.14295  0.69673 -2.792  0.00524 **
+pTT1b             0.27864   1.32134  0.39790  0.700  0.48375   
+pTT2              0.93086   2.53669  0.41840  2.225  0.02610 * 
+pTT3a             1.33031   3.78220  0.56006  2.375  0.01753 * 
+pTT3b            -0.01178   0.98829  0.78975 -0.015  0.98810   
+pTT4a             0.68142   1.97669  0.73389  0.929  0.35315   
+pTT4b             2.56213  12.96338  1.41329  1.813  0.06985 . 
+gross_ETEY       -0.02956   0.97087  0.70231 -0.042  0.96643   
+pNN1a             0.68781   1.98935  0.38041  1.808  0.07059 . 
+pNN1b             0.87216   2.39207  0.41729  2.090  0.03661 * 
+pNNx             -0.27631   0.75858  0.63063 -0.438  0.66128   
+ENEY             -0.53707   0.58446  0.46306 -1.160  0.24612   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+                 exp(coef) exp(-coef) lower .95 upper .95
+sexM                1.5706    0.63672   0.95983    2.5699
+surgeonGS           6.1787    0.16185   0.61940   61.6354
+surgeonKCCH         2.3288    0.42941   0.20503   26.4507
+surgeonLBC          3.8007    0.26311   0.45537   31.7224
+surgeonLGH          4.0443    0.24726   0.54724   29.8895
+surgeonLMC          2.6317    0.37999   0.32682   21.1911
+surgeonLYS         10.5270    0.09499   1.15445   95.9916
+surgeonOKK         11.2091    0.08921   0.97762  128.5198
+surgeonoutside     12.6622    0.07898   1.68232   95.3038
+surgeonSYS          3.3576    0.29783   0.36943   30.5153
+RiskIntermediate    0.3325    3.00745   0.12777    0.8653
+RiskLow             0.1429    6.99550   0.03649    0.5601
+pTT1b               1.3213    0.75681   0.60578    2.8821
+pTT2                2.5367    0.39422   1.11717    5.7599
+pTT3a               3.7822    0.26440   1.26190   11.3361
+pTT3b               0.9883    1.01185   0.21021    4.6465
+pTT4a               1.9767    0.50590   0.46908    8.3297
+pTT4b              12.9634    0.07714   0.81232  206.8754
+gross_ETEY          0.9709    1.03000   0.24511    3.8457
+pNN1a               1.9894    0.50268   0.94386    4.1929
+pNN1b               2.3921    0.41805   1.05579    5.4196
+pNNx                0.7586    1.31826   0.22040    2.6109
+ENEY                0.5845    1.71098   0.23583    1.4485
+
+Concordance= 0.792  (se = 0.024 )
+Likelihood ratio test= 112.5  on 23 df,   p=9e-14
+Wald test            = 110.8  on 23 df,   p=2e-13
+Score (logrank) test = 176.7  on 23 df,   p=&lt;2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="multivariate---anova" class="level3">
+<h3 class="anchored" data-anchor-id="multivariate---anova">Multivariate - anova</h3>
+<ul>
+<li>anova(cox_model1)는 Cox 회귀 모델에서 각 변수의 기여도를 평가하는 역할을 함.</li>
+<li>각 변수가 모델에 얼마나 중요한지 평가하고, p-value를 기반으로 불필요한 변수를 제거할 수 있음.</li>
+<li>Deviance 값이 크고 p-value가 낮은 변수는 중요한 변수이며, p-value가 높으면 제거를 고려할 수 있음.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+ Cox model: response is Surv(time, recur)
+Terms added sequentially (first to last)
+
+           loglik   Chisq Df Pr(&gt;|Chi|)    
+NULL      -567.06                          
+sex       -560.92 12.2949  1  0.0004542 ***
+surgeon   -540.38 41.0665  9  4.864e-06 ***
+Risk      -521.33 38.1136  2  5.293e-09 ***
+pT        -515.05 12.5592  6  0.0505954 .  
+gross_ETE -515.03  0.0306  1  0.8610979    
+pN        -511.51  7.0409  3  0.0706054 .  
+ENE       -510.84  1.3484  1  0.2455630    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<ul>
+<li>Cox 회귀 모델에서는 로그 우도를 최대화(즉, 덜 음수로 만듦) 하는 방향으로 최적화를 수행
+<ul>
+<li>NULL 모델 (loglik = -567.06) → 변수가 없는 기본 모델</li>
+<li>모델이 점점 좋아질수록 loglik 값 증가</li>
+<li>sex 추가 후: loglik = -560.92 (증가)</li>
+<li>surgeon 추가 후: loglik = -540.38 (더 증가)</li>
+<li>Risk 추가 후: loglik = -521.33 (더 증가)</li>
+</ul></li>
+</ul>
+</section>
+<section id="multivariate---adjusted" class="level3">
+<h3 class="anchored" data-anchor-id="multivariate---adjusted">Multivariate - adjusted</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk, <span class="at">data =</span> rai_recur)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk, data = rai_recur)
+
+  n= 1180, number of events= 83 
+
+                    coef exp(coef) se(coef)      z Pr(&gt;|z|)    
+sexM              0.4982    1.6457   0.2395  2.080 0.037565 *  
+surgeonGS         2.1328    8.4382   1.1591  1.840 0.065765 .  
+surgeonKCCH       1.0549    2.8717   1.2288  0.859 0.390615    
+surgeonLBC        1.4876    4.4264   1.0806  1.377 0.168610    
+surgeonLGH        1.4732    4.3630   1.0184  1.447 0.148017    
+surgeonLMC        1.0942    2.9867   1.0618  1.030 0.302797    
+surgeonLYS        2.4262   11.3163   1.0983  2.209 0.027169 *  
+surgeonOKK        2.7836   16.1772   1.2349  2.254 0.024193 *  
+surgeonoutside    2.7641   15.8650   1.0244  2.698 0.006967 ** 
+surgeonSYS        1.3356    3.8024   1.1204  1.192 0.233240    
+RiskIntermediate -0.9051    0.4045   0.2375 -3.811 0.000139 ***
+RiskLow          -2.2999    0.1003   0.4506 -5.105 3.31e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+                 exp(coef) exp(-coef) lower .95 upper .95
+sexM                1.6457    0.60765   1.02906    2.6318
+surgeonGS           8.4382    0.11851   0.87021   81.8234
+surgeonKCCH         2.8717    0.34822   0.25835   31.9211
+surgeonLBC          4.4264    0.22592   0.53245   36.7971
+surgeonLGH          4.3630    0.22920   0.59284   32.1094
+surgeonLMC          2.9867    0.33482   0.37270   23.9346
+surgeonLYS         11.3163    0.08837   1.31470   97.4044
+surgeonOKK         16.1772    0.06182   1.43790  182.0038
+surgeonoutside     15.8650    0.06303   2.13064  118.1329
+surgeonSYS          3.8024    0.26299   0.42299   34.1799
+RiskIntermediate    0.4045    2.47207   0.25397    0.6443
+RiskLow             0.1003    9.97356   0.04146    0.2425
+
+Concordance= 0.761  (se = 0.025 )
+Likelihood ratio test= 91.47  on 12 df,   p=3e-14
+Wald test            = 86.44  on 12 df,   p=2e-13
+Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="survfit-plot" class="level3">
+<h3 class="anchored" data-anchor-id="survfit-plot">survfit plot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(cox_model1), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.6</span>,<span class="dv">1</span>),<span class="at">xlab =</span> <span class="st">"months"</span>,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Proportion not reached"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/plot3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
