@@ -99,7 +99,7 @@ summary(km_fit)
 summary(km_fit, c(365*1:19)) ### 정해진 time에 맞는 생존테이블표를 만든다.
 ```
 
-```{r plot_cox}
+```{r plot_cox2}
 plot(km_fit, col = rainbow(2), lty=1:2)
 legend("topright", legend = c("Female","Male"),
 col= rainbow(2), lty=1:2)
