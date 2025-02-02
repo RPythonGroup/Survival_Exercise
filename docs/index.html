@@ -148,8 +148,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#readrds" id="toc-readrds" class="nav-link active" data-scroll-target="#readrds">readRDS</a></li>
   <li><a href="#mytable" id="toc-mytable" class="nav-link" data-scroll-target="#mytable">mytable</a></li>
   <li><a href="#surv함수" id="toc-surv함수" class="nav-link" data-scroll-target="#surv함수">Surv함수</a></li>
-  <li><a href="#survfit함수와-객체" id="toc-survfit함수와-객체" class="nav-link" data-scroll-target="#survfit함수와-객체">survfit함수와 객체</a></li>
-  <li><a href="#plot-그래프를-수정" id="toc-plot-그래프를-수정" class="nav-link" data-scroll-target="#plot-그래프를-수정">plot 그래프를 수정</a></li>
+  <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">plot</a></li>
+  <li><a href="#중앙생존시간" id="toc-중앙생존시간" class="nav-link" data-scroll-target="#중앙생존시간">중앙생존시간</a></li>
+  <li><a href="#평균생존기간" id="toc-평균생존기간" class="nav-link" data-scroll-target="#평균생존기간">평균생존기간</a></li>
+  <li><a href="#survfit함수와-객체" id="toc-survfit함수와-객체" class="nav-link" data-scroll-target="#survfit함수와-객체">survfit함수와 객체</a>
+  <ul class="collapse">
+  <li><a href="#kaplan-meier-기반" id="toc-kaplan-meier-기반" class="nav-link" data-scroll-target="#kaplan-meier-기반">Kaplan-Meier 기반</a></li>
+  <li><a href="#cox-model-기반" id="toc-cox-model-기반" class="nav-link" data-scroll-target="#cox-model-기반">cox model 기반</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">summary</a></li>
+  <li><a href="#summary-기간지정" id="toc-summary-기간지정" class="nav-link" data-scroll-target="#summary-기간지정">summary 기간지정</a></li>
+  <li><a href="#plot-그래프---범례추가" id="toc-plot-그래프---범례추가" class="nav-link" data-scroll-target="#plot-그래프---범례추가">plot 그래프 - 범례추가</a></li>
+  <li><a href="#ggplot---risk.table-추가하기" id="toc-ggplot---risk.table-추가하기" class="nav-link" data-scroll-target="#ggplot---risk.table-추가하기">ggplot - risk.table 추가하기</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -355,6 +365,9 @@ Attaching package: 'dplyr'</code></pre>
 <pre><code>[1] 387+ 124+ 176+ 113+ 242+  42+</code></pre>
 </div>
 </div>
+</section>
+<section id="plot" class="level3">
+<h3 class="anchored" data-anchor-id="plot">plot</h3>
 <ul>
 <li>plot() 함수는 제네릭 함수로, 기본적으로 산점도를 그리지만, Surv 객체를 인자로 받으면 내부적으로 plot.survfit() 메서드를 호출하여 Kaplan-Meier(KM) 곡선을 반환함</li>
 <li>time의 단위가 월이라서 x 축은 400까지 표시됨</li>
@@ -372,8 +385,9 @@ Attaching package: 'dplyr'</code></pre>
 <ul>
 <li><strong>survfit 함수의 인자</strong>로 사용되므로 중요</li>
 </ul>
-<section id="중앙생존시간" class="level4">
-<h4 class="anchored" data-anchor-id="중앙생존시간">중앙생존시간</h4>
+</section>
+<section id="중앙생존시간" class="level3">
+<h3 class="anchored" data-anchor-id="중앙생존시간">중앙생존시간</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(km)  <span class="do">## Surv 객체에 대한 method 함수들이 있다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -391,8 +405,8 @@ NA </code></pre>
 </div>
 </div>
 </section>
-<section id="평균생존기간" class="level4">
-<h4 class="anchored" data-anchor-id="평균생존기간">평균생존기간</h4>
+<section id="평균생존기간" class="level3">
+<h3 class="anchored" data-anchor-id="평균생존기간">평균생존기간</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -400,13 +414,13 @@ NA </code></pre>
 </div>
 </div>
 </section>
-</section>
-<section id="survfit함수와-객체" class="level3">
-<h3 class="anchored" data-anchor-id="survfit함수와-객체">survfit함수와 객체</h3>
+<section id="survfit함수와-객체" class="level2">
+<h2 class="anchored" data-anchor-id="survfit함수와-객체">survfit함수와 객체</h2>
 <ul>
 <li>Surv 객체와 공변량을 formula 형태의 인자로 받아 Kaplan-Meier 또는 Cox 모델 기반 생존 확률을 저장한 객체를 반환</li>
-<li>Kaplan-Meier 기반</li>
 </ul>
+<section id="kaplan-meier-기반" class="level3">
+<h3 class="anchored" data-anchor-id="kaplan-meier-기반">Kaplan-Meier 기반</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(km<span class="sc">~</span><span class="dv">1</span>)) <span class="co">#Kaplan-Meier 기반</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -417,9 +431,9 @@ NA </code></pre>
 </div>
 </div>
 </div>
-<ul>
-<li>cox model 기반</li>
-</ul>
+</section>
+<section id="cox-model-기반" class="level3">
+<h3 class="anchored" data-anchor-id="cox-model-기반">cox model 기반</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>km_fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(km<span class="sc">~</span>rai_recur<span class="sc">$</span>sex) <span class="co">#cox model 기반</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -432,9 +446,9 @@ NA </code></pre>
 </div>
 </div>
 </div>
-<ul>
-<li>summary</li>
-</ul>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">summary</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -512,9 +526,9 @@ NA </code></pre>
   176     46       1    0.840 0.03088        0.782        0.903</code></pre>
 </div>
 </div>
-<ul>
-<li>1~19년</li>
-</ul>
+</section>
+<section id="summary-기간지정" class="level3">
+<h3 class="anchored" data-anchor-id="summary-기간지정">summary 기간지정</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit, <span class="fu">c</span>(<span class="dv">12</span><span class="sc">*</span><span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>)) <span class="do">### 정해진 time에 맞는 생존테이블표를 만든다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -566,8 +580,8 @@ NA </code></pre>
 </div>
 </div>
 </section>
-<section id="plot-그래프를-수정" class="level3">
-<h3 class="anchored" data-anchor-id="plot-그래프를-수정">plot 그래프를 수정</h3>
+<section id="plot-그래프---범례추가" class="level3">
+<h3 class="anchored" data-anchor-id="plot-그래프---범례추가">plot 그래프 - 범례추가</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
@@ -580,8 +594,9 @@ NA </code></pre>
 </div>
 </div>
 </div>
-<section id="risk.table-추가하기" class="level4">
-<h4 class="anchored" data-anchor-id="risk.table-추가하기">risk.table 추가하기</h4>
+</section>
+<section id="ggplot---risk.table-추가하기" class="level3">
+<h3 class="anchored" data-anchor-id="ggplot---risk.table-추가하기">ggplot - risk.table 추가하기</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
