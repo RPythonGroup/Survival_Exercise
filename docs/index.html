@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2025-02-03">
 <meta name="description" content="익명화된 자료로 연습하기">
 
-<title>Hands-on Survival Analysis with an deidentified Thyroid Cancer Dataset – R441-Survival_Exercise</title>
+<title>Survival Analysis with an deidentified Thyroid Cancer Dataset – R441-Survival_Exercise</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -174,7 +174,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#readrds" id="toc-readrds" class="nav-link active" data-scroll-target="#readrds">readRDS</a></li>
+  <li><a href="#git-clone" id="toc-git-clone" class="nav-link active" data-scroll-target="#git-clone">git clone</a></li>
+  <li><a href="#readrds" id="toc-readrds" class="nav-link" data-scroll-target="#readrds">readRDS</a></li>
   <li><a href="#mytable" id="toc-mytable" class="nav-link" data-scroll-target="#mytable">mytable</a></li>
   <li><a href="#surv함수" id="toc-surv함수" class="nav-link" data-scroll-target="#surv함수">Surv함수</a></li>
   <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">plot</a></li>
@@ -192,7 +193,7 @@ window.Quarto = {
   <li><a href="#cox-단변량-반복" id="toc-cox-단변량-반복" class="nav-link" data-scroll-target="#cox-단변량-반복">cox 단변량 반복</a></li>
   <li><a href="#multivariate-analysis" id="toc-multivariate-analysis" class="nav-link" data-scroll-target="#multivariate-analysis">Multivariate Analysis</a></li>
   <li><a href="#multivariate---anova" id="toc-multivariate---anova" class="nav-link" data-scroll-target="#multivariate---anova">Multivariate - anova</a></li>
-  <li><a href="#multivariate---adjusted" id="toc-multivariate---adjusted" class="nav-link" data-scroll-target="#multivariate---adjusted">Multivariate - adjusted</a></li>
+  <li><a href="#multivariate---refit" id="toc-multivariate---refit" class="nav-link" data-scroll-target="#multivariate---refit">Multivariate - refit</a></li>
   <li><a href="#survfit-plot" id="toc-survfit-plot" class="nav-link" data-scroll-target="#survfit-plot">survfit plot</a></li>
   </ul></li>
   </ul>
@@ -203,7 +204,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hands-on Survival Analysis with an deidentified Thyroid Cancer Dataset</h1>
+<h1 class="title">Survival Analysis with an deidentified Thyroid Cancer Dataset</h1>
   <div class="quarto-categories">
     <div class="quarto-category">R</div>
     <div class="quarto-category">Survival</div>
@@ -248,13 +249,24 @@ window.Quarto = {
 </header>
 
 
+<section id="git-clone" class="level3">
+<h3 class="anchored" data-anchor-id="git-clone">git clone</h3>
+<ul>
+<li>원격저장소 HTTP url: https://github.com/RPythonGroup/Survival_Exercise.git</li>
+<li>clone 시 폴더를 지정하면 현재 폴더 하부에 지정하는 폴더명으로 clone 됨.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/RPythonGroup/Survival_Exercise.git R441-Survival_Exercise</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>프로젝트만들기에서 기존폴더에서 만들기에서 clone된 폴더를</li>
+</ul>
+</section>
 <section id="readrds" class="level3">
 <h3 class="anchored" data-anchor-id="readrds">readRDS</h3>
 <ul>
 <li>R에서만 사용하는 자료형태인 RDS를 읽어오며, 자료형이 보전되고 빠름</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -269,7 +281,7 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"deidentified_data/rai_recur.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"deidentified_data/rai_recur.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="mytable" class="level3">
@@ -279,11 +291,11 @@ Attaching package: 'dplyr'</code></pre>
 <li>mylatex 출력은 성공하지 못함.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moonBook)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mytable(recur~.,data=rai_recur) %&gt;% mylatex() %&gt;% cat # 정상작동이 되지 않는 이유는?</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mytable</span>(recur<span class="sc">~</span>.,<span class="at">data=</span>rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moonBook)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mytable(recur~.,data=rai_recur) %&gt;% mylatex() %&gt;% cat # 정상작동이 되지 않는 이유는?</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mytable</span>(recur<span class="sc">~</span>.,<span class="at">data=</span>rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                      Descriptive Statistics by 'recur'                    
@@ -379,13 +391,13 @@ Attaching package: 'dplyr'</code></pre>
 <li>time과 event를 인자로 받아 특수한 형태의 matrix인 생존(survival) 객체 반환</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>recur <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(rai_recur<span class="sc">$</span>recur)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">Surv</span>(rai_recur<span class="sc">$</span>time, <span class="at">event =</span> rai_recur<span class="sc">$</span>recur) <span class="do">## default type : "right"</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># km &lt;- Surv(time=time, event = recur, data=rai_recur) # data= 형식을 지원하지 않음</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>recur <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(rai_recur<span class="sc">$</span>recur)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">Surv</span>(rai_recur<span class="sc">$</span>time, <span class="at">event =</span> rai_recur<span class="sc">$</span>recur) <span class="do">## default type : "right"</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># km &lt;- Surv(time=time, event = recur, data=rai_recur) # data= 형식을 지원하지 않음</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> 'Surv' num [1:1180, 1:2] 387+ 124+ 176+ 113+ 242+  42+ 209+ 159+ 167+ 416+ ...
  - attr(*, "dimnames")=List of 2
@@ -395,7 +407,7 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 387+ 124+ 176+ 113+ 242+  42+</code></pre>
 </div>
@@ -408,7 +420,7 @@ Attaching package: 'dplyr'</code></pre>
 <li>time의 단위가 월이라서 x 축은 400까지 표시됨</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km) <span class="do">## km - Surv class (time, status) 가지고 있는 리스트</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km) <span class="do">## km - Surv class (time, status) 가지고 있는 리스트</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -427,7 +439,7 @@ Attaching package: 'dplyr'</code></pre>
 <li>50%에 도달하지 못하여 NA 반환됨</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(km)  <span class="do">## Surv 객체에 대한 method 함수들이 있다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(km)  <span class="do">## Surv 객체에 대한 method 함수들이 있다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$quantile
 50 
@@ -449,7 +461,7 @@ NA </code></pre>
 <li>입력이 개월이므로 재발 기간의 평귬이 이 약 6년?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 68.56186</code></pre>
 </div>
@@ -463,7 +475,7 @@ NA </code></pre>
 <section id="kaplan-meier-기반" class="level3">
 <h3 class="anchored" data-anchor-id="kaplan-meier-기반">Kaplan-Meier 기반</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(km<span class="sc">~</span><span class="dv">1</span>)) <span class="co">#Kaplan-Meier 기반</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(km<span class="sc">~</span><span class="dv">1</span>)) <span class="co">#Kaplan-Meier 기반</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -476,9 +488,9 @@ NA </code></pre>
 <section id="cox-model-기반" class="level3">
 <h3 class="anchored" data-anchor-id="cox-model-기반">cox model 기반</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>km_fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(km<span class="sc">~</span>rai_recur<span class="sc">$</span>sex) <span class="co">#cox model 기반</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>km_fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(km<span class="sc">~</span>rai_recur<span class="sc">$</span>sex) <span class="co">#cox model 기반</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -491,7 +503,7 @@ NA </code></pre>
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">summary</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call: survfit(formula = km ~ rai_recur$sex)
 
@@ -571,7 +583,7 @@ NA </code></pre>
 <section id="summary-기간지정" class="level3">
 <h3 class="anchored" data-anchor-id="summary-기간지정">summary 기간지정</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit, <span class="fu">c</span>(<span class="dv">12</span><span class="sc">*</span><span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>)) <span class="do">### 정해진 time에 맞는 생존테이블표를 만든다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit, <span class="fu">c</span>(<span class="dv">12</span><span class="sc">*</span><span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>)) <span class="do">### 정해진 time에 맞는 생존테이블표를 만든다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call: survfit(formula = km ~ rai_recur$sex)
 
@@ -624,9 +636,9 @@ NA </code></pre>
 <section id="plot-그래프---범례추가" class="level3">
 <h3 class="anchored" data-anchor-id="plot-그래프---범례추가">plot 그래프 - 범례추가</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="at">col=</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="at">col=</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -639,7 +651,7 @@ NA </code></pre>
 <section id="ggsurvplot---risk.table-추가하기" class="level3">
 <h3 class="anchored" data-anchor-id="ggsurvplot---risk.table-추가하기">ggsurvplot - risk.table 추가하기</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'survminer' was built under R version 4.4.2</code></pre>
 </div>
@@ -658,20 +670,20 @@ Attaching package: 'survminer'</code></pre>
 
     myeloma</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  km_fit, </span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> rai_recur,</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> T, </span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xscale =</span> <span class="dv">12</span>, <span class="do">## xscale can be "d_y"</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">break.x.by =</span> <span class="dv">5</span><span class="sc">*</span><span class="dv">12</span>,</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval =</span> T, </span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval.size =</span><span class="dv">4</span>, </span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">surv.median.line =</span> <span class="st">"hv"</span>,</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>, <span class="do">## if TRUE, risk table is displayed under graph</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="st">"sex"</span>, </span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.labs=</span><span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#E7B800"</span>, <span class="st">"#2E9FDF"</span>),</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  km_fit, </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> rai_recur,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> T, </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xscale =</span> <span class="dv">12</span>, <span class="do">## xscale can be "d_y"</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">break.x.by =</span> <span class="dv">5</span><span class="sc">*</span><span class="dv">12</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval =</span> T, </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval.size =</span><span class="dv">4</span>, </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">surv.median.line =</span> <span class="st">"hv"</span>,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>, <span class="do">## if TRUE, risk table is displayed under graph</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="st">"sex"</span>, </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.labs=</span><span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#E7B800"</span>, <span class="st">"#2E9FDF"</span>),</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in .add_surv_median(p, fit, type = surv.median.line, fun = fun, :
 Median survival not reached.</code></pre>
@@ -691,8 +703,8 @@ Median survival not reached.</code></pre>
 h(t | X) = h_0(t) \exp(\beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p)
 \]</span> #### sex에 대한 단변량</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>univariate_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(km <span class="sc">~</span> sex, <span class="at">data =</span> rai_recur)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(univariate_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>univariate_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(km <span class="sc">~</span> sex, <span class="at">data =</span> rai_recur)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(univariate_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = km ~ sex, data = rai_recur)
@@ -757,7 +769,7 @@ Score (logrank) test = 14.41  on 1 df,   p=1e-04</code></pre>
 <section id="cox-단변량-반복" class="level3">
 <h3 class="anchored" data-anchor-id="cox-단변량-반복">cox 단변량 반복</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  mycph : perform coxph of individual expecting variables
@@ -795,8 +807,8 @@ ENEY               2.96  1.76   4.97 0.000</code></pre>
 <section id="multivariate-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-analysis">Multivariate Analysis</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cox_model1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cox_model1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk + pT + 
@@ -871,7 +883,7 @@ Score (logrank) test = 176.7  on 23 df,   p=&lt;2e-16</code></pre>
 <li>Deviance 값이 크고 p-value가 낮은 변수는 중요한 변수이며, p-value가 높으면 제거를 고려할 수 있음.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
  Cox model: response is Surv(time, recur)
@@ -901,11 +913,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </ul></li>
 </ul>
 </section>
-<section id="multivariate---adjusted" class="level3">
-<h3 class="anchored" data-anchor-id="multivariate---adjusted">Multivariate - adjusted</h3>
+<section id="multivariate---refit" class="level3">
+<h3 class="anchored" data-anchor-id="multivariate---refit">Multivariate - refit</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk, <span class="at">data =</span> rai_recur)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk, <span class="at">data =</span> rai_recur)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk, data = rai_recur)
@@ -952,8 +964,8 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="survfit-plot" class="level3">
 <h3 class="anchored" data-anchor-id="survfit-plot">survfit plot</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(cox_model1), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.6</span>,<span class="dv">1</span>),<span class="at">xlab =</span> <span class="st">"months"</span>,</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Proportion not reached"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(cox_model1), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.6</span>,<span class="dv">1</span>),<span class="at">xlab =</span> <span class="st">"months"</span>,</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Proportion not reached"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

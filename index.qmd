@@ -1,5 +1,5 @@
 ---
-title: "Hands-on Survival Analysis with an deidentified Thyroid Cancer Dataset"
+title: "Survival Analysis with an deidentified Thyroid Cancer Dataset"
 description: "익명화된 자료로 연습하기"
 author: "RPythonStudyGroup feat. ChatGPT"
 date: "2025-02-03"
@@ -9,6 +9,17 @@ categories:
   - Survival
   - hands-on
 ---
+
+### git clone
+
+-   원격저장소 HTTP url: https://github.com/RPythonGroup/Survival_Exercise.git
+-   clone 시 폴더를 지정하면 현재 폴더 하부에 지정하는 폴더명으로 clone 됨.
+
+``` bash
+git clone https://github.com/RPythonGroup/Survival_Exercise.git R441-Survival_Exercise
+```
+
+-   프로젝트만들기에서 기존폴더에서 만들기에서 clone된 폴더를
 
 ### readRDS
 
@@ -160,26 +171,31 @@ summary(univariate_model)
 ```
 
 #### 1️⃣ 검정 방법의 차이
+
 -   Likelihood Ratio Test: 모델 전체의 적합도를 평가하는 강력한 검정 방법.
 -   Wald Test: 개별 회귀 계수가 0과 다른지 평가하지만, 샘플 크기가 작거나 계수가 매우 크면 부정확할 수 있음.
 -   Score Test: 작은 샘플에서도 안정적인 검정이지만, 일부 가정이 충족되지 않으면 결과가 다를 수 있음.
 
 #### 2️⃣ 샘플 크기 및 데이터 특성
-- 샘플 크기가 작을 때 → Wald Test는 불안정할 수 있음.
-- 변수 간 다중공선성 → Wald Test와 LRT 결과가 다를 수 있음.
-- 검열 데이터 비율이 높을 때 → Score Test가 다른 두 검정과 다를 수 있음.
+
+-   샘플 크기가 작을 때 → Wald Test는 불안정할 수 있음.
+-   변수 간 다중공선성 → Wald Test와 LRT 결과가 다를 수 있음.
+-   검열 데이터 비율이 높을 때 → Score Test가 다른 두 검정과 다를 수 있음.
 
 #### **📌 (1) Likelihood Ratio Test만 유의미하고 나머지는 유의미하지 않다면?**
-- 모델이 전체적으로는 의미가 있지만, 개별 변수의 효과가 강하지 않을 수 있음.\
-- Wald Test와 Score Test도 확인하면서 **개별 변수의 기여도를 분석**해야 함.
+
+-   모델이 전체적으로는 의미가 있지만, 개별 변수의 효과가 강하지 않을 수 있음.\
+-   Wald Test와 Score Test도 확인하면서 **개별 변수의 기여도를 분석**해야 함.
 
 #### **📌 (2) Wald Test만 유의미하다면?**
-- 특정 변수의 효과는 강하지만, 모델 전체가 데이터를 충분히 설명하지 못할 수 있음.\
-- 변수 선택을 다시 검토하고 다중공선성을 점검해야 함.
+
+-   특정 변수의 효과는 강하지만, 모델 전체가 데이터를 충분히 설명하지 못할 수 있음.\
+-   변수 선택을 다시 검토하고 다중공선성을 점검해야 함.
 
 #### **📌 (3) Score Test만 유의미하다면?**
-- 데이터가 잘 맞지만, 특정 변수의 효과가 불확실할 가능성이 있음.\
-- 모델의 구조와 데이터의 분포를 다시 확인해야 함.
+
+-   데이터가 잘 맞지만, 특정 변수의 효과가 불확실할 가능성이 있음.\
+-   모델의 구조와 데이터의 분포를 다시 확인해야 함.
 
 ### cox 단변량 반복
 
@@ -215,7 +231,7 @@ anova(cox_model1)
     -   surgeon 추가 후: loglik = -540.38 (더 증가)
     -   Risk 추가 후: loglik = -521.33 (더 증가)
 
-### Multivariate - adjusted
+### Multivariate - refit
 
 ```{r refit}
 
