@@ -10,6 +10,8 @@ categories:
   - hands-on
 ---
 
+## 준비하기
+
 ### git clone
 
 -   원격저장소 HTTP url: https://github.com/RPythonGroup/Survival_Exercise.git
@@ -50,7 +52,7 @@ library(moonBook)
 mytable(recur~.,data=rai_recur)
 ```
 
-### Surv함수
+## Surv함수
 
 -   time과 event를 인자로 받아 특수한 형태의 matrix인 생존(survival) 객체 반환
 
@@ -100,7 +102,7 @@ median(km)  ## Surv 객체에 대한 method 함수들이 있다.
 mean(km)
 ```
 
-## survfit함수와 객체
+## survfit
 
 -   Surv 객체와 공변량을 formula 형태의 인자로 받아 Kaplan-Meier 또는 Cox 모델 기반 생존 확률을 저장한 객체를 반환
 
@@ -161,6 +163,8 @@ ggsurvplot(
   palette = c("#E7B800", "#2E9FDF"),
 )
 ```
+
+## coxph
 
 ### cox 단변량
 
@@ -250,6 +254,9 @@ summary(cox_model_refit)
 plot(survfit(cox_model1), ylim = c(0.6,1),xlab = "months",
 ylab = "Proportion not reached")
 ```
+
+## 잔차분석
+
 ### time histogram
 
 ```{r time_hist}
@@ -281,6 +288,8 @@ rai_recur %>% ggplot(aes(age,resid))+geom_point()+geom_smooth()+theme_classic()
 
 rai_recur %>% ggplot(aes(size,resid))+geom_point()+geom_smooth()+theme_classic()
 ```
+
+## 연속형변수와 cox
 
 ### cox 단변량 반복2
 

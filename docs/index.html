@@ -174,14 +174,19 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#git-clone" id="toc-git-clone" class="nav-link active" data-scroll-target="#git-clone">git clone</a></li>
+  <li><a href="#준비하기" id="toc-준비하기" class="nav-link active" data-scroll-target="#준비하기">준비하기</a>
+  <ul class="collapse">
+  <li><a href="#git-clone" id="toc-git-clone" class="nav-link" data-scroll-target="#git-clone">git clone</a></li>
   <li><a href="#readrds" id="toc-readrds" class="nav-link" data-scroll-target="#readrds">readRDS</a></li>
   <li><a href="#mytable" id="toc-mytable" class="nav-link" data-scroll-target="#mytable">mytable</a></li>
-  <li><a href="#surv함수" id="toc-surv함수" class="nav-link" data-scroll-target="#surv함수">Surv함수</a></li>
+  </ul></li>
+  <li><a href="#surv함수" id="toc-surv함수" class="nav-link" data-scroll-target="#surv함수">Surv함수</a>
+  <ul class="collapse">
   <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">plot</a></li>
   <li><a href="#중앙값-생존기간" id="toc-중앙값-생존기간" class="nav-link" data-scroll-target="#중앙값-생존기간">중앙값 생존기간</a></li>
   <li><a href="#평균생존기간" id="toc-평균생존기간" class="nav-link" data-scroll-target="#평균생존기간">평균생존기간</a></li>
-  <li><a href="#survfit함수와-객체" id="toc-survfit함수와-객체" class="nav-link" data-scroll-target="#survfit함수와-객체">survfit함수와 객체</a>
+  </ul></li>
+  <li><a href="#survfit" id="toc-survfit" class="nav-link" data-scroll-target="#survfit">survfit</a>
   <ul class="collapse">
   <li><a href="#kaplan-meier-기반" id="toc-kaplan-meier-기반" class="nav-link" data-scroll-target="#kaplan-meier-기반">Kaplan-Meier 기반</a></li>
   <li><a href="#cox-model-기반" id="toc-cox-model-기반" class="nav-link" data-scroll-target="#cox-model-기반">cox model 기반</a></li>
@@ -189,17 +194,26 @@ window.Quarto = {
   <li><a href="#summary-기간지정" id="toc-summary-기간지정" class="nav-link" data-scroll-target="#summary-기간지정">summary 기간지정</a></li>
   <li><a href="#plot-그래프---범례추가" id="toc-plot-그래프---범례추가" class="nav-link" data-scroll-target="#plot-그래프---범례추가">plot 그래프 - 범례추가</a></li>
   <li><a href="#ggsurvplot---risk.table-추가하기" id="toc-ggsurvplot---risk.table-추가하기" class="nav-link" data-scroll-target="#ggsurvplot---risk.table-추가하기">ggsurvplot - risk.table 추가하기</a></li>
+  </ul></li>
+  <li><a href="#coxph" id="toc-coxph" class="nav-link" data-scroll-target="#coxph">coxph</a>
+  <ul class="collapse">
   <li><a href="#cox-단변량" id="toc-cox-단변량" class="nav-link" data-scroll-target="#cox-단변량">cox 단변량</a></li>
   <li><a href="#cox-단변량-반복" id="toc-cox-단변량-반복" class="nav-link" data-scroll-target="#cox-단변량-반복">cox 단변량 반복</a></li>
   <li><a href="#multivariate-analysis" id="toc-multivariate-analysis" class="nav-link" data-scroll-target="#multivariate-analysis">Multivariate Analysis</a></li>
   <li><a href="#multivariate---anova" id="toc-multivariate---anova" class="nav-link" data-scroll-target="#multivariate---anova">Multivariate - anova</a></li>
   <li><a href="#multivariate---refit" id="toc-multivariate---refit" class="nav-link" data-scroll-target="#multivariate---refit">Multivariate - refit</a></li>
   <li><a href="#survfit-plot" id="toc-survfit-plot" class="nav-link" data-scroll-target="#survfit-plot">survfit plot</a></li>
+  </ul></li>
+  <li><a href="#잔차분석" id="toc-잔차분석" class="nav-link" data-scroll-target="#잔차분석">잔차분석</a>
+  <ul class="collapse">
   <li><a href="#time-histogram" id="toc-time-histogram" class="nav-link" data-scroll-target="#time-histogram">time histogram</a></li>
   <li><a href="#age-histogram" id="toc-age-histogram" class="nav-link" data-scroll-target="#age-histogram">age histogram</a></li>
   <li><a href="#size-histogram" id="toc-size-histogram" class="nav-link" data-scroll-target="#size-histogram">size histogram</a></li>
   <li><a href="#age-residual" id="toc-age-residual" class="nav-link" data-scroll-target="#age-residual">age residual</a></li>
   <li><a href="#size-residual" id="toc-size-residual" class="nav-link" data-scroll-target="#size-residual">size residual</a></li>
+  </ul></li>
+  <li><a href="#연속형변수와-cox" id="toc-연속형변수와-cox" class="nav-link" data-scroll-target="#연속형변수와-cox">연속형변수와 cox</a>
+  <ul class="collapse">
   <li><a href="#cox-단변량-반복2" id="toc-cox-단변량-반복2" class="nav-link" data-scroll-target="#cox-단변량-반복2">cox 단변량 반복2</a></li>
   <li><a href="#multivariate-analysis-2" id="toc-multivariate-analysis-2" class="nav-link" data-scroll-target="#multivariate-analysis-2">Multivariate Analysis 2</a></li>
   <li><a href="#multivariate---anova-2" id="toc-multivariate---anova-2" class="nav-link" data-scroll-target="#multivariate---anova-2">Multivariate - anova 2</a></li>
@@ -258,6 +272,8 @@ window.Quarto = {
 </header>
 
 
+<section id="준비하기" class="level2">
+<h2 class="anchored" data-anchor-id="준비하기">준비하기</h2>
 <section id="git-clone" class="level3">
 <h3 class="anchored" data-anchor-id="git-clone">git clone</h3>
 <ul>
@@ -400,8 +416,9 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 </section>
-<section id="surv함수" class="level3">
-<h3 class="anchored" data-anchor-id="surv함수">Surv함수</h3>
+</section>
+<section id="surv함수" class="level2">
+<h2 class="anchored" data-anchor-id="surv함수">Surv함수</h2>
 <ul>
 <li>time과 event를 인자로 받아 특수한 형태의 matrix인 생존(survival) 객체 반환</li>
 </ul>
@@ -427,7 +444,6 @@ Attaching package: 'dplyr'</code></pre>
 <pre><code>[1] 387+ 124+ 176+ 113+ 242+  42+</code></pre>
 </div>
 </div>
-</section>
 <section id="plot" class="level3">
 <h3 class="anchored" data-anchor-id="plot">plot</h3>
 <ul>
@@ -482,8 +498,9 @@ NA </code></pre>
 </div>
 </div>
 </section>
-<section id="survfit함수와-객체" class="level2">
-<h2 class="anchored" data-anchor-id="survfit함수와-객체">survfit함수와 객체</h2>
+</section>
+<section id="survfit" class="level2">
+<h2 class="anchored" data-anchor-id="survfit">survfit</h2>
 <ul>
 <li>Surv 객체와 공변량을 formula 형태의 인자로 받아 Kaplan-Meier 또는 Cox 모델 기반 생존 확률을 저장한 객체를 반환</li>
 </ul>
@@ -709,6 +726,9 @@ Median survival not reached.</code></pre>
 </div>
 </div>
 </section>
+</section>
+<section id="coxph" class="level2">
+<h2 class="anchored" data-anchor-id="coxph">coxph</h2>
 <section id="cox-단변량" class="level3">
 <h3 class="anchored" data-anchor-id="cox-단변량">cox 단변량</h3>
 <p><span class="math display">\[
@@ -987,6 +1007,9 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 </section>
+</section>
+<section id="잔차분석" class="level2">
+<h2 class="anchored" data-anchor-id="잔차분석">잔차분석</h2>
 <section id="time-histogram" class="level3">
 <h3 class="anchored" data-anchor-id="time-histogram">time histogram</h3>
 <div class="cell">
@@ -1060,6 +1083,9 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 </section>
+</section>
+<section id="연속형변수와-cox" class="level2">
+<h2 class="anchored" data-anchor-id="연속형변수와-cox">연속형변수와 cox</h2>
 <section id="cox-단변량-반복2" class="level3">
 <h3 class="anchored" data-anchor-id="cox-단변량-반복2">cox 단변량 반복2</h3>
 <div class="cell">
