@@ -13,13 +13,17 @@ categories:
 ### git clone
 
 -   원격저장소 HTTP url: https://github.com/RPythonGroup/Survival_Exercise.git
--   터메널에서 git clone 시 현재 디렉토리 하부에 지정하는 디렉토리명으로 clone 됨.
+-   터미널에서 git clone 시 현재 디렉토리 하부에 지정하는 디렉토리명으로 clone 됨.
 
 ``` bash
 git clone https://github.com/RPythonGroup/Survival_Exercise.git R441-Survival_Exercise
 ```
--   프로젝트만들기에서 기존 디렉토리에서 만들기에서 clone 된 디렉토리를 선택하면 됨.
--  패키지관리를 renv로 하는 경우에는 renv::snapshot 등으로 renv.lock 파일의 패키지 목록과 일치화 시키면 바람직함.
+
+-   RStudio 프로젝트만들기에서 기존 디렉토리에서 만들기에서 clone 된 디렉토리를 선택하면 됨.
+-   패키지관리를 renv로 할려면, 
+    -       renv::activate로 활성화시키고,
+    -       renv::snapshot 으로 renv.lock 파일의 패키지 목록을 설치하도록 옵션을 선택하시면 됨. 
+    -       설치가 완료되면 renv::status() 로 프로젝트에 설치된 패키지와 renv.lock 파일에 기록된 패키지 목록이 일치하는지 확인하면 됨.
 
 ### readRDS
 
@@ -68,7 +72,7 @@ head(km)
 
 ### plot
 
--   plot() 함수는 제네릭 함수로, 기본적으로 산점도를 그리지만, Surv 객체를 인자로 받으면 내부적으로 plot.survfit() 메서드를 호출하여 Kaplan-Meier(KM) 곡선을 반환함
+-   plot() 함수는 제네릭 함수로, 기본적으로 산점도를 그리지만, Surv 객체를 인자로 받으면 내부적으로 plot.survfit() method를 호출하여 Kaplan-Meier(KM) 곡선을 반환함
 -   time의 단위가 월이라서 x 축은 400까지 표시됨
 
 ```{r plot.survfit}
@@ -76,7 +80,7 @@ head(km)
 plot(km) ## km - Surv class (time, status) 가지고 있는 리스트
 ```
 
--   **survfit 함수의 인자**로 사용되므로 중요
+-  Surv 객체는 **survfit 함수의 인자**로 사용되므로 중요
 
 ### 중앙값 생존기간
 
@@ -89,7 +93,7 @@ median(km)  ## Surv 객체에 대한 method 함수들이 있다.
 
 ### 평균생존기간
 
--   입력이 개월이므로 재발 기간의 평귬이 이 약 6년?
+-   데이터셋의 time 변수는 입력단위가 월이므로 재발에 소요된 평균이 약 69개월 ?
 
 ```{r mean}
 
@@ -233,7 +237,7 @@ anova(cox_model1)
 
 ### Multivariate - refit
 
-```{r refit}
+```{r refit1}
 
 cox_model_refit <- coxph(Surv(time, recur) ~ sex+surgeon+Risk, data = rai_recur)
 summary(cox_model_refit)
@@ -246,6 +250,68 @@ summary(cox_model_refit)
 plot(survfit(cox_model1), ylim = c(0.6,1),xlab = "months",
 ylab = "Proportion not reached")
 ```
+### time histogram
+
+```{r time_hist}
+
+with(rai_recur, hist(time/12, breaks = 40, main = "Histogram of time"))
+```
+### age histogram
+```{r age_hist}
+
+with(rai_recur, hist(age, breaks = 16, main = "Histogram of age"))
+```
+### size histogram
+```{r size_hist}
+
+with(rai_recur, hist(size, breaks = 16, main = "Histogram of age"))
+```
+
+### age residual
+```{r age_residual}
+
+m1 <- coxph(Surv(time,recur)~1,data = rai_recur)
+rai_recur$resid <- residuals(m1, type = "martingale")
+rai_recur %>% ggplot(aes(age,resid))+geom_point()+geom_smooth()+theme_classic()
+
+```
+
+### size residual
+```{r size_residual}
+
+rai_recur %>% ggplot(aes(size,resid))+geom_point()+geom_smooth()+theme_classic()
+```
+
+### cox 단변량 반복2
+
+```{r mycph_all}
+
+mycph(Surv(time, recur) ~ age+sex+surgeon+Risk+pT+size+gross_ETE+pN+ENE, data = rai_recur)
+
+```
+### Multivariate Analysis 2
+
+```{r Multivariate_all}
+
+cox_model2 <- coxph(Surv(time, recur) ~ age+sex+surgeon+Risk+pT+size+gross_ETE+pN+ENE, data = rai_recur)
+summary(cox_model2)
+```
+
+### Multivariate - anova 2
+
+```{r anova2}
+
+anova(cox_model2)
+```
+
+### Multivariate refit 2
+
+```{r refit2}
+
+cox_model_refit2 <- coxph(Surv(time, recur) ~ age+sex+surgeon+Risk+size+pN, data = rai_recur)
+summary(cox_model_refit2)
+```
+
 
 ```{r end}
 
