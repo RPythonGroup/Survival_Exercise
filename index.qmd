@@ -3,7 +3,7 @@ title: "Survival Analysis with the deidentified Thyroid Cancer Dataset"
 description: "익명화된 자료로 연습하기"
 author: "RPythonStudyGroup feat. ChatGPT"
 date: "2025-02-03"
-date-modified: "2025-02-03"
+date-modified: "2025-02-17"
 categories:
   - R
   - Survival
@@ -303,6 +303,9 @@ rai_recur %>% ggplot(aes(age,resid))+geom_point()+geom_smooth()+theme_classic()
 ```
 
 ```{r age_predict}
+
+# 25.02.17 추가
+# chatGPT 답변에 따라 age를 공변량으로 한후 risk를 predict하여 그래프화
 
 m2 <- coxph(Surv(time,recur)~age,data = rai_recur)
 rai_recur$predicted_hr <- predict(m2, type = "risk")

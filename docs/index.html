@@ -261,7 +261,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 3, 2025</p>
+      <p class="date-modified">February 17, 2025</p>
     </div>
   </div>
     
@@ -1072,9 +1072,12 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time,recur)<span class="sc">~</span>age,<span class="at">data =</span> rai_recur)</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>predicted_hr <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2, <span class="at">type =</span> <span class="st">"risk"</span>)</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,predicted_hr))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 25.02.17 추가</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># chatGPT 답변에 따라 age를 공변량으로 한후 risk를 predict하여 그래프화</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time,recur)<span class="sc">~</span>age,<span class="at">data =</span> rai_recur)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>predicted_hr <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2, <span class="at">type =</span> <span class="st">"risk"</span>)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,predicted_hr))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
 </div>
