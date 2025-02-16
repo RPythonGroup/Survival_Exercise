@@ -275,7 +275,7 @@ window.Quarto = {
 <section id="준비하기" class="level2">
 <h2 class="anchored" data-anchor-id="준비하기">준비하기</h2>
 <section id="git-clone" class="level3">
-<h3 class="anchored" data-anchor-id="git-clone">git clone</h3>
+<h3 class="anchored">git clone</h3>
 <ul>
 <li>원격저장소 HTTP url: https://github.com/RPythonGroup/Survival_Exercise.git</li>
 <li>터미널에서 git clone 시 현재 디렉토리 하부에 지정하는 디렉토리명으로 clone 됨.</li>
@@ -283,9 +283,11 @@ window.Quarto = {
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/RPythonGroup/Survival_Exercise.git R441-Survival_Exercise</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>RStudio 프로젝트만들기에서 기존 디렉토리에서 만들기에서 clone 된 디렉토리를 선택하면 됨.</li>
-<li>패키지관리를 renv로 할려면,
+<li><h2 id="패키지관리를-renv로-할려면" class="anchored" data-anchor-id="git-clone">패키지관리를 renv로 할려면,</h2>
+<pre><code>```         
+  renv::activate로 활성화시키고,
+```</code></pre>
 <ul>
-<li><pre><code>  renv::activate로 활성화시키고,</code></pre></li>
 <li><pre><code>  renv::snapshot 으로 renv.lock 파일의 패키지 목록을 설치하도록 옵션을 선택하시면 됨. </code></pre></li>
 <li><pre><code>  설치가 완료되면 renv::status() 로 프로젝트에 설치된 패키지와 renv.lock 파일에 기록된 패키지 목록이 일치하는지 확인하면 됨.</code></pre></li>
 </ul></li>
@@ -685,6 +687,9 @@ NA </code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'survminer' was built under R version 4.4.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: ggplot2</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -699,20 +704,20 @@ Attaching package: 'survminer'</code></pre>
 
     myeloma</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  km_fit, </span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> rai_recur,</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> T, </span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xscale =</span> <span class="dv">12</span>, <span class="do">## xscale can be "d_y"</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">break.x.by =</span> <span class="dv">5</span><span class="sc">*</span><span class="dv">12</span>,</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval =</span> T, </span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval.size =</span><span class="dv">4</span>, </span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">surv.median.line =</span> <span class="st">"hv"</span>,</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>, <span class="do">## if TRUE, risk table is displayed under graph</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="st">"sex"</span>, </span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.labs=</span><span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#E7B800"</span>, <span class="st">"#2E9FDF"</span>),</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  km_fit, </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> rai_recur,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> T, </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xscale =</span> <span class="dv">12</span>, <span class="do">## xscale can be "d_y"</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">break.x.by =</span> <span class="dv">5</span><span class="sc">*</span><span class="dv">12</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval =</span> T, </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval.size =</span><span class="dv">4</span>, </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">surv.median.line =</span> <span class="st">"hv"</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>, <span class="do">## if TRUE, risk table is displayed under graph</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="st">"sex"</span>, </span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.labs=</span><span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#E7B800"</span>, <span class="st">"#2E9FDF"</span>),</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in .add_surv_median(p, fit, type = surv.median.line, fun = fun, :
 Median survival not reached.</code></pre>
@@ -735,8 +740,8 @@ Median survival not reached.</code></pre>
 h(t | X) = h_0(t) \exp(\beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p)
 \]</span> #### sex에 대한 단변량</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>univariate_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(km <span class="sc">~</span> sex, <span class="at">data =</span> rai_recur)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(univariate_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>univariate_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(km <span class="sc">~</span> sex, <span class="at">data =</span> rai_recur)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(univariate_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = km ~ sex, data = rai_recur)
@@ -801,7 +806,7 @@ Score (logrank) test = 14.41  on 1 df,   p=1e-04</code></pre>
 <section id="cox-단변량-반복" class="level3">
 <h3 class="anchored" data-anchor-id="cox-단변량-반복">cox 단변량 반복</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  mycph : perform coxph of individual expecting variables
@@ -839,8 +844,8 @@ ENEY               2.96  1.76   4.97 0.000</code></pre>
 <section id="multivariate-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-analysis">Multivariate Analysis</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>cox_model1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>cox_model1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk + pT + 
@@ -915,7 +920,7 @@ Score (logrank) test = 176.7  on 23 df,   p=&lt;2e-16</code></pre>
 <li>Deviance 값이 크고 p-value가 낮은 변수는 중요한 변수이며, p-value가 높으면 제거를 고려할 수 있음.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
  Cox model: response is Surv(time, recur)
@@ -948,8 +953,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="multivariate---refit" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate---refit">Multivariate - refit</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk, <span class="at">data =</span> rai_recur)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk, <span class="at">data =</span> rai_recur)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk, data = rai_recur)
@@ -996,8 +1001,8 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="survfit-plot" class="level3">
 <h3 class="anchored" data-anchor-id="survfit-plot">survfit plot</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(cox_model1), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.6</span>,<span class="dv">1</span>),<span class="at">xlab =</span> <span class="st">"months"</span>,</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Proportion not reached"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(cox_model1), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.6</span>,<span class="dv">1</span>),<span class="at">xlab =</span> <span class="st">"months"</span>,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Proportion not reached"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1013,7 +1018,7 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="time-histogram" class="level3">
 <h3 class="anchored" data-anchor-id="time-histogram">time histogram</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(time<span class="sc">/</span><span class="dv">12</span>, <span class="at">breaks =</span> <span class="dv">40</span>, <span class="at">main =</span> <span class="st">"Histogram of time"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(time<span class="sc">/</span><span class="dv">12</span>, <span class="at">breaks =</span> <span class="dv">40</span>, <span class="at">main =</span> <span class="st">"Histogram of time"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1026,7 +1031,7 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="age-histogram" class="level3">
 <h3 class="anchored" data-anchor-id="age-histogram">age histogram</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(age, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(age, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1039,7 +1044,7 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="size-histogram" class="level3">
 <h3 class="anchored" data-anchor-id="size-histogram">size histogram</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(size, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(size, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1052,9 +1057,9 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="age-residual" class="level3">
 <h3 class="anchored" data-anchor-id="age-residual">age residual</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time,recur)<span class="sc">~</span><span class="dv">1</span>,<span class="at">data =</span> rai_recur)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>resid <span class="ot">&lt;-</span> <span class="fu">residuals</span>(m1, <span class="at">type =</span> <span class="st">"martingale"</span>)</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time,recur)<span class="sc">~</span><span class="dv">1</span>,<span class="at">data =</span> rai_recur)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>resid <span class="ot">&lt;-</span> <span class="fu">residuals</span>(m1, <span class="at">type =</span> <span class="st">"martingale"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
 </div>
@@ -1066,11 +1071,26 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time,recur)<span class="sc">~</span>age,<span class="at">data =</span> rai_recur)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>predicted_hr <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2, <span class="at">type =</span> <span class="st">"risk"</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,predicted_hr))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/age_predict-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="size-residual" class="level3">
 <h3 class="anchored" data-anchor-id="size-residual">size residual</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(size,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(size,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
 </div>
@@ -1089,7 +1109,7 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="cox-단변량-반복2" class="level3">
 <h3 class="anchored" data-anchor-id="cox-단변량-반복2">cox 단변량 반복2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  mycph : perform coxph of individual expecting variables
@@ -1129,8 +1149,8 @@ ENEY               2.96  1.76   4.97 0.000</code></pre>
 <section id="multivariate-analysis-2" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-analysis-2">Multivariate Analysis 2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>cox_model2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>cox_model2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = Surv(time, recur) ~ age + sex + surgeon + Risk + 
@@ -1204,7 +1224,7 @@ Score (logrank) test = 201.3  on 25 df,   p=&lt;2e-16</code></pre>
 <section id="multivariate---anova-2" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate---anova-2">Multivariate - anova 2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
  Cox model: response is Surv(time, recur)
@@ -1229,8 +1249,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="multivariate-refit-2" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-refit-2">Multivariate refit 2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>size<span class="sc">+</span>pN, <span class="at">data =</span> rai_recur)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>size<span class="sc">+</span>pN, <span class="at">data =</span> rai_recur)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = Surv(time, recur) ~ age + sex + surgeon + Risk + 

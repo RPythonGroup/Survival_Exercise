@@ -22,10 +22,24 @@ git clone https://github.com/RPythonGroup/Survival_Exercise.git R441-Survival_Ex
 ```
 
 -   RStudio 프로젝트만들기에서 기존 디렉토리에서 만들기에서 clone 된 디렉토리를 선택하면 됨.
--   패키지관리를 renv로 할려면, 
-    -       renv::activate로 활성화시키고,
-    -       renv::snapshot 으로 renv.lock 파일의 패키지 목록을 설치하도록 옵션을 선택하시면 됨. 
-    -       설치가 완료되면 renv::status() 로 프로젝트에 설치된 패키지와 renv.lock 파일에 기록된 패키지 목록이 일치하는지 확인하면 됨.
+-   패키지관리를 renv로 할려면,
+    -   
+
+        ```         
+          renv::activate로 활성화시키고,
+        ```
+
+    -   
+
+        ```         
+          renv::snapshot 으로 renv.lock 파일의 패키지 목록을 설치하도록 옵션을 선택하시면 됨. 
+        ```
+
+    -   
+
+        ```         
+          설치가 완료되면 renv::status() 로 프로젝트에 설치된 패키지와 renv.lock 파일에 기록된 패키지 목록이 일치하는지 확인하면 됨.
+        ```
 
 ### readRDS
 
@@ -82,7 +96,7 @@ head(km)
 plot(km) ## km - Surv class (time, status) 가지고 있는 리스트
 ```
 
--  Surv 객체는 **survfit 함수의 인자**로 사용되므로 중요
+-   Surv 객체는 **survfit 함수의 인자**로 사용되므로 중요
 
 ### 중앙값 생존기간
 
@@ -263,18 +277,23 @@ ylab = "Proportion not reached")
 
 with(rai_recur, hist(time/12, breaks = 40, main = "Histogram of time"))
 ```
+
 ### age histogram
+
 ```{r age_hist}
 
 with(rai_recur, hist(age, breaks = 16, main = "Histogram of age"))
 ```
+
 ### size histogram
+
 ```{r size_hist}
 
 with(rai_recur, hist(size, breaks = 16, main = "Histogram of age"))
 ```
 
 ### age residual
+
 ```{r age_residual}
 
 m1 <- coxph(Surv(time,recur)~1,data = rai_recur)
@@ -283,7 +302,16 @@ rai_recur %>% ggplot(aes(age,resid))+geom_point()+geom_smooth()+theme_classic()
 
 ```
 
+```{r age_predict}
+
+m2 <- coxph(Surv(time,recur)~age,data = rai_recur)
+rai_recur$predicted_hr <- predict(m2, type = "risk")
+rai_recur %>% ggplot(aes(age,predicted_hr))+geom_point()+geom_smooth()+theme_classic()
+
+```
+
 ### size residual
+
 ```{r size_residual}
 
 rai_recur %>% ggplot(aes(size,resid))+geom_point()+geom_smooth()+theme_classic()
@@ -298,6 +326,7 @@ rai_recur %>% ggplot(aes(size,resid))+geom_point()+geom_smooth()+theme_classic()
 mycph(Surv(time, recur) ~ age+sex+surgeon+Risk+pT+size+gross_ETE+pN+ENE, data = rai_recur)
 
 ```
+
 ### Multivariate Analysis 2
 
 ```{r Multivariate_all}
@@ -320,7 +349,6 @@ anova(cox_model2)
 cox_model_refit2 <- coxph(Surv(time, recur) ~ age+sex+surgeon+Risk+size+pN, data = rai_recur)
 summary(cox_model_refit2)
 ```
-
 
 ```{r end}
 
