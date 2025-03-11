@@ -22,12 +22,16 @@ git clone https://github.com/RPythonGroup/Survival_Exercise.git R441-Survival_Ex
 ```
 
 -   RStudio 프로젝트만들기에서 기존 디렉토리에서 만들기에서 clone 된 디렉토리를 선택하면 됨.
--   패키지관리를 renv로 할려면,
-    -   
 
-        ```         
-          renv::activate로 활성화시키고,
-        ```
+-   
+
+    ## 패키지관리를 renv로 할려면,
+
+    ````         
+    ```         
+      renv::activate로 활성화시키고,
+    ```
+    ````
 
     -   
 
