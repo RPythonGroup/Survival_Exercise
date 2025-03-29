@@ -2,15 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="RPythonStudyGroup feat. ChatGPT">
+<meta name="author" content="BenKorea feat. ChatGPT">
 <meta name="dcterms.date" content="2025-02-03">
-<meta name="description" content="익명화된 자료로 연습하기">
+<meta name="description" content="25.02.03 Cox 생존분석실습과정을 요약하고 PSM(모수적 생존분석모델)을 추가했습니다">
 
-<title>Survival Analysis with the deidentified Thyroid Cancer Dataset – R441-Survival_Exercise</title>
+<title>생존분석실습 – r443-survival_exercise</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ddd961a2510921635943dfbbd19534c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a78d143f50226e98f7090688eeb399e8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -145,7 +145,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">R441-Survival_Exercise</span>
+    <span class="navbar-title">r443-survival_exercise</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -174,19 +174,22 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#hand-on-실습준비" id="toc-hand-on-실습준비" class="nav-link active" data-scroll-target="#hand-on-실습준비">Hand-on 실습준비</a>
+  <li><a href="#hands-on-실습준비" id="toc-hands-on-실습준비" class="nav-link active" data-scroll-target="#hands-on-실습준비">Hands-on 실습준비</a>
   <ul class="collapse">
-  <li><a href="#git-clone" id="toc-git-clone" class="nav-link" data-scroll-target="#git-clone">git clone</a></li>
+  <li><a href="#cloning다운로드" id="toc-cloning다운로드" class="nav-link" data-scroll-target="#cloning다운로드">Cloning(=다운로드)</a></li>
   <li><a href="#rstudio-project로-만들기" id="toc-rstudio-project로-만들기" class="nav-link" data-scroll-target="#rstudio-project로-만들기">RStudio Project로 만들기</a></li>
   </ul></li>
   <li><a href="#패키지-관리" id="toc-패키지-관리" class="nav-link" data-scroll-target="#패키지-관리">패키지 관리</a>
   <ul class="collapse">
-  <li><a href="#readrds" id="toc-readrds" class="nav-link" data-scroll-target="#readrds">readRDS</a></li>
-  <li><a href="#mytable" id="toc-mytable" class="nav-link" data-scroll-target="#mytable">mytable</a></li>
+  <li><a href="#renv-activation" id="toc-renv-activation" class="nav-link" data-scroll-target="#renv-activation">renv activation</a></li>
+  <li><a href="#renv-restore" id="toc-renv-restore" class="nav-link" data-scroll-target="#renv-restore">renv restore</a></li>
   </ul></li>
-  <li><a href="#surv함수" id="toc-surv함수" class="nav-link" data-scroll-target="#surv함수">Surv함수</a>
+  <li><a href="#hands-on-시작하기" id="toc-hands-on-시작하기" class="nav-link" data-scroll-target="#hands-on-시작하기">Hands-on 시작하기</a>
   <ul class="collapse">
-  <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">plot</a></li>
+  <li><a href="#데이터-읽어오기" id="toc-데이터-읽어오기" class="nav-link" data-scroll-target="#데이터-읽어오기">데이터 읽어오기</a></li>
+  <li><a href="#테이터의-개요-파악하기" id="toc-테이터의-개요-파악하기" class="nav-link" data-scroll-target="#테이터의-개요-파악하기">테이터의 개요 파악하기</a></li>
+  <li><a href="#생존객체-만들기" id="toc-생존객체-만들기" class="nav-link" data-scroll-target="#생존객체-만들기">생존객체 만들기</a></li>
+  <li><a href="#생존곡선-만들기" id="toc-생존곡선-만들기" class="nav-link" data-scroll-target="#생존곡선-만들기">생존곡선 만들기</a></li>
   <li><a href="#중앙값-생존기간" id="toc-중앙값-생존기간" class="nav-link" data-scroll-target="#중앙값-생존기간">중앙값 생존기간</a></li>
   <li><a href="#평균생존기간" id="toc-평균생존기간" class="nav-link" data-scroll-target="#평균생존기간">평균생존기간</a></li>
   </ul></li>
@@ -210,7 +213,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#잔차분석" id="toc-잔차분석" class="nav-link" data-scroll-target="#잔차분석">잔차분석</a>
   <ul class="collapse">
-  <li><a href="#time-histogram" id="toc-time-histogram" class="nav-link" data-scroll-target="#time-histogram">time histogram</a></li>
+  <li><a href="#year-histogram" id="toc-year-histogram" class="nav-link" data-scroll-target="#year-histogram">year histogram</a></li>
   <li><a href="#age-histogram" id="toc-age-histogram" class="nav-link" data-scroll-target="#age-histogram">age histogram</a></li>
   <li><a href="#size-histogram" id="toc-size-histogram" class="nav-link" data-scroll-target="#size-histogram">size histogram</a></li>
   <li><a href="#age-residual" id="toc-age-residual" class="nav-link" data-scroll-target="#age-residual">age residual</a></li>
@@ -231,7 +234,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Survival Analysis with the deidentified Thyroid Cancer Dataset</h1>
+<h1 class="title">생존분석실습</h1>
   <div class="quarto-categories">
     <div class="quarto-category">R</div>
     <div class="quarto-category">Survival</div>
@@ -241,7 +244,7 @@ window.Quarto = {
 
 <div>
   <div class="description">
-    익명화된 자료로 연습하기
+    25.02.03 Cox 생존분석실습과정을 요약하고 PSM(모수적 생존분석모델)을 추가했습니다
   </div>
 </div>
 
@@ -251,7 +254,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>RPythonStudyGroup feat. ChatGPT </p>
+             <p>BenKorea feat. ChatGPT </p>
           </div>
   </div>
     
@@ -265,7 +268,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 13, 2025</p>
+      <p class="date-modified">March 29, 2025</p>
     </div>
   </div>
     
@@ -276,12 +279,13 @@ window.Quarto = {
 </header>
 
 
-<section id="hand-on-실습준비" class="level2">
-<h2 class="anchored" data-anchor-id="hand-on-실습준비">Hand-on 실습준비</h2>
-<p>실제데이터를 가지고 단계별로 진행되는 과정을 따라 할 수 있도록 R로 작성된 Quarto 프로젝트를 만들었습니다. 이 Quarto 프로젝트 파일들은 연구회의 Github 원격저장소에 저장해 두었습니다. 따라서 실습을 위해서는 로컬인 자신의 PC로 원격저장소의 프로젝트 파일들은 cloning(=다운로드)하셔야 합니다. Cloning을 위해서는 RStudio만 있는 것이 아니라 Git도 설치되어 있어야 합니다. 혹시라도 나중에 합류한 회원분들 중 Git 설치가 안되어 있으면 다음을 참고하여 설치해 두시기 바랍니다. https://rpythongroup.github.io/Website/posts/tools/Git/Git_setup.html</p>
-<section id="git-clone" class="level3">
-<h3 class="anchored" data-anchor-id="git-clone">git clone</h3>
-<p>Git을 이용한 clone은 마치 새로운 프로젝트를 만드는 것과 같습니다. 그래서 Rstudio에서 모든 프로젝트들은 닫은 상태에서 진행하시는 것이 바람직합니다. 윈도우 운영체제에서는 RStudio에서 모든 프로젝트를 다 닫는다면 default working directory상에 RStudio가 열려있게 됩니다. 연구회에서는 default working directory를 <code>C:\Projects\</code>로 미리 지정하는 것으로 추천드렸습니다.</p>
+<section id="hands-on-실습준비" class="level2">
+<h2 class="anchored" data-anchor-id="hands-on-실습준비">Hands-on 실습준비</h2>
+<p>실제데이터를 가지고 생존분석 단계별 진행과정을 따라할 수 있도록 Quarto 프로젝트를 만들었고 연구회의 Github 원격저장소(repository)에 올려두었습니다. 실습을 위해서는 로컬인 자신의 PC로 원격저장소의 프로젝트 파일들을 cloning(=다운로드)하셔야 합니다.</p>
+<p>Cloning을 위해서는 (R과 RStudio만 있는 것이 아니라) Git도 설치되어 있어야 합니다. 혹시라도 나중에 합류한 회원분들 중 Git 등의 설치가 안되어 있으면 <a href="https://rpythonstudy.github.io/website/posts/tools/git/git_install.html" target="_blank">연구회 웹사이트의 해당부분</a>을 참고하여 설치해 두시기 바랍니다.</p>
+<section id="cloning다운로드" class="level3">
+<h3 class="anchored" data-anchor-id="cloning다운로드">Cloning(=다운로드)</h3>
+<p>Git을 이용한 clone은 마치 새로운 프로젝트를 만드는 것과 같습니다. 그래서 Rstudio에서 모든 프로젝트들은 닫은 상태에서 진행하시는 것이 바람직합니다. 윈도우 운영체제에서는 RStudio에서 모든 프로젝트를 다 닫는다면 default working directory상에 RStudio가 열려있게 됩니다. 연구회에서는 default working directory를 - 윈도우의 경우 <code>C:\Projects\</code> - WSL2 Ubuntu의 경우 로 미리 지정하는 것으로 추천드렸습니다.</p>
 <p>이 상태에서 RStudio Console pane, Terminal tab에서 다음을 실행하면 cloning이 됩니다. 이 때 설치폴더를 아래와 같이 지정하게 됩니다.</p>
 <div class="cell">
 <div class="code-with-filename">
@@ -300,31 +304,47 @@ window.Quarto = {
 </section>
 <section id="패키지-관리" class="level2">
 <h2 class="anchored" data-anchor-id="패키지-관리">패키지 관리</h2>
-<p>R로 진행하는 프로젝트에서 package를 독립적으로 관리하기 위해서 연구회에서는 <code>renv</code> 사용을 추천하고 있으며 clone한 프로젝트도 역시 <code>renv</code>로 관리되고 있습니다. 하지만 clone이 된 상태에서는 renv가 바로 적용되지는 않기 때문에 아래의 단계를 통해서 용하면 ## 패키지관리를 renv로 할려면,</p>
-<pre><code>````         
-```         
-  renv::activate로 활성화시키고,
-```
-````
-
--   
-
-    ```         
-      renv::snapshot 으로 renv.lock 파일의 패키지 목록을 설치하도록 옵션을 선택하시면 됨. 
-    ```
-
--   
-
-    ```         
-      설치가 완료되면 renv::status() 로 프로젝트에 설치된 패키지와 renv.lock 파일에 기록된 패키지 목록이 일치하는지 확인하면 됨.
-    ```</code></pre>
-<section id="readrds" class="level3">
-<h3 class="anchored" data-anchor-id="readrds">readRDS</h3>
-<ul>
-<li>R에서만 사용하는 자료형태인 RDS를 읽어오며, 자료형이 보전되고 빠름</li>
-</ul>
+<p>R로 진행하는 프로젝트에서 package를 독립적으로 관리하기 위해서 연구회에서는 <code>renv</code> 사용을 추천하고 있으며 clone한 프로젝트도 역시 <code>renv</code>로 관리되고 있습니다. 하지만 clone된 상태에서는 renv가 아직 활성화가 되지 않았으므로 아래와 같이 활성화를 먼저 실행합니다.</p>
+<section id="renv-activation" class="level3">
+<h3 class="anchored" data-anchor-id="renv-activation">renv activation</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>RStudio Console</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">activate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>만약에 renv package가 설치되어 있지 않다면, 아래와 같이 설치를 먼저 진행합니다.</p>
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>RStudio Console</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"renv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>적절한 renv::activate 옵션을 선택한 후 진행하면 프로젝트 working directory 하부에 renv 디렉토리가 만들어집니다. 원격저장소의 R 버전이 R-4.4.3이고 local에 설치된 R이 4.1.2라면 renv.lock 파일을 열어서 R 버전을 4.1.2로 수정하고 아래와 같이 restore를 실행합니다.</p>
+</section>
+<section id="renv-restore" class="level3">
+<h3 class="anchored" data-anchor-id="renv-restore">renv restore</h3>
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>RStudio Console</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="hands-on-시작하기" class="level2">
+<h2 class="anchored" data-anchor-id="hands-on-시작하기">Hands-on 시작하기</h2>
+<section id="데이터-읽어오기" class="level3">
+<h3 class="anchored" data-anchor-id="데이터-읽어오기">데이터 읽어오기</h3>
+<p>이번 실습에서는 R에서만 사용하는 자료형태인 RDS를 읽어오도록 하겠습니다. 이는 csv 파일이나 엑셀형태의 자료에 비해 자료형이 그대로 보전되고 읽어오는 속도가 더 빠릅니다.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -339,21 +359,16 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"deidentified_data/rai_recur.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"deidentified_data/rai_recur.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="mytable" class="level3">
-<h3 class="anchored" data-anchor-id="mytable">mytable</h3>
-<ul>
-<li>mytable로 자료 개요 파악</li>
-<li>mylatex 출력은 성공하지 못함.</li>
-</ul>
+<section id="테이터의-개요-파악하기" class="level3">
+<h3 class="anchored" data-anchor-id="테이터의-개요-파악하기">테이터의 개요 파악하기</h3>
+<p>여러가지 방법이 있겠지만 문건웅선생님의 moonBook 패키지를 이용하여 mytable로 개요를 파악하고자 합니다.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moonBook)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mytable(recur~.,data=rai_recur) %&gt;% mylatex() %&gt;% cat # 정상작동이 되지 않는 이유는?</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mytable</span>(recur<span class="sc">~</span>.,<span class="at">data=</span>rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moonBook)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mytable</span>(recur<span class="sc">~</span>.,<span class="at">data=</span>rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                      Descriptive Statistics by 'recur'                    
@@ -438,47 +453,47 @@ Attaching package: 'dplyr'</code></pre>
  ENE                                                                  0.001
    - N                             985 (89.8%)         64 (77.1%)          
    - Y                             112 (10.2%)         19 (22.9%)          
- time                              143.4 ± 65.0       53.0 ± 53.0     0.000
+ time                            4336.9 ± 1966.6    1603.1 ± 1603.1   0.000
 ——————————————————————————————————————————————————————————————————————————— </code></pre>
 </div>
 </div>
 </section>
-</section>
-<section id="surv함수" class="level2">
-<h2 class="anchored" data-anchor-id="surv함수">Surv함수</h2>
-<ul>
-<li>time과 event를 인자로 받아 특수한 형태의 matrix인 생존(survival) 객체 반환</li>
-</ul>
+<section id="생존객체-만들기" class="level3">
+<h3 class="anchored" data-anchor-id="생존객체-만들기">생존객체 만들기</h3>
+<p>실습에 이용되는 자료는 time이 일단위입니다. 이를 연단위로 수정하도록 합니다.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>recur <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(rai_recur<span class="sc">$</span>recur)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">Surv</span>(rai_recur<span class="sc">$</span>time, <span class="at">event =</span> rai_recur<span class="sc">$</span>recur) <span class="do">## default type : "right"</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># km &lt;- Surv(time=time, event = recur, data=rai_recur) # data= 형식을 지원하지 않음</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>year <span class="ot">&lt;-</span> rai_recur<span class="sc">$</span>time<span class="sc">/</span><span class="fl">365.2422</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>생존분석의 첫단계는 생존객체를 만드는 것입니다. survival package에 포함된 Surv() 함수를 이용합니다. 이 함수는 time과 event를 인자로 받아 특수한 형태의 matrix인 생존(survival) 객체 반환합니다.</p>
+<p>str() 함수로 생존객체의 구조를 보면 매우 흥미롭습니다. time은 시간을 나타내고 event는 사건의 발생여부를 나타냅니다. 시간뒤에 +를 부연하는 방식으로 구현되어 있습니다.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>recur <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(rai_recur<span class="sc">$</span>recur)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">Surv</span>(rai_recur<span class="sc">$</span>year, <span class="at">event =</span> rai_recur<span class="sc">$</span>recur) <span class="do">## default type : "right"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> 'Surv' num [1:1180, 1:2] 387+ 124+ 176+ 113+ 242+  42+ 209+ 159+ 167+ 416+ ...
+<pre><code> 'Surv' num [1:1180, 1:2] 32.031+ 10.278+ 14.552+  9.375+ 20.074+  3.494+ 17.290+ 13.189+ 13.862+ 34.413+ ...
  - attr(*, "dimnames")=List of 2
   ..$ : NULL
   ..$ : chr [1:2] "time" "status"
  - attr(*, "type")= chr "right"</code></pre>
 </div>
 </div>
+<p>head() 함수로 6개의 자료만 확인해보면, 6개의 시간과 +가 있는 경우와 없는 경우가 있음을 알 수 있습니다.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 387+ 124+ 176+ 113+ 242+  42+</code></pre>
+<pre><code>[1] 32.030800+ 10.278111+ 14.551988+  9.374601+ 20.074351+  3.493572+</code></pre>
 </div>
 </div>
-<section id="plot" class="level3">
-<h3 class="anchored" data-anchor-id="plot">plot</h3>
-<ul>
-<li>plot() 함수는 제네릭 함수로, 기본적으로 산점도를 그리지만, Surv 객체를 인자로 받으면 내부적으로 plot.survfit() method를 호출하여 Kaplan-Meier(KM) 곡선을 반환함</li>
-<li>time의 단위가 월이라서 x 축은 400까지 표시됨</li>
-</ul>
+</section>
+<section id="생존곡선-만들기" class="level3">
+<h3 class="anchored" data-anchor-id="생존곡선-만들기">생존곡선 만들기</h3>
+<p>물론 생존곡선을 그리는 방법은 많습니다. 여기서는 일단 가장 간단한 형태를 먼저 그려 보겠습니다. plot() 함수는 제네릭 함수로, 기본적으로 산점도를 그리지만, Surv 객체를 인자로 받으면 내부적으로 plot.survfit() method를 호출하여 Kaplan-Meier(KM) 곡선을 반환합니다.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km) <span class="do">## km - Surv class (time, status) 가지고 있는 리스트</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km) <span class="do">## km - Surv class (time, status) 가지고 있는 리스트</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -497,7 +512,7 @@ Attaching package: 'dplyr'</code></pre>
 <li>50%에 도달하지 못하여 NA 반환됨</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(km)  <span class="do">## Surv 객체에 대한 method 함수들이 있다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(km)  <span class="do">## Surv 객체에 대한 method 함수들이 있다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$quantile
 50 
@@ -519,9 +534,9 @@ NA </code></pre>
 <li>데이터셋의 time 변수는 입력단위가 월이므로 재발에 소요된 평균이 약 69개월 ?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 68.56186</code></pre>
+<pre><code>[1] 5.709017</code></pre>
 </div>
 </div>
 </section>
@@ -534,7 +549,7 @@ NA </code></pre>
 <section id="kaplan-meier-기반" class="level3">
 <h3 class="anchored" data-anchor-id="kaplan-meier-기반">Kaplan-Meier 기반</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(km<span class="sc">~</span><span class="dv">1</span>)) <span class="co">#Kaplan-Meier 기반</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(km<span class="sc">~</span><span class="dv">1</span>)) <span class="co">#Kaplan-Meier 기반</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -547,9 +562,9 @@ NA </code></pre>
 <section id="cox-model-기반" class="level3">
 <h3 class="anchored" data-anchor-id="cox-model-기반">cox model 기반</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>km_fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(km<span class="sc">~</span>rai_recur<span class="sc">$</span>sex) <span class="co">#cox model 기반</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>km_fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(km<span class="sc">~</span>rai_recur<span class="sc">$</span>sex) <span class="co">#cox model 기반</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -562,142 +577,125 @@ NA </code></pre>
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">summary</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call: survfit(formula = km ~ rai_recur$sex)
 
                 rai_recur$sex=F 
- time n.risk n.event survival std.err lower 95% CI upper 95% CI
-    6    934       2    0.998 0.00151        0.995        1.000
-    8    932       2    0.996 0.00214        0.992        1.000
-    9    930       1    0.995 0.00239        0.990        0.999
-   10    929       1    0.994 0.00261        0.988        0.999
-   11    928       2    0.991 0.00302        0.986        0.997
-   12    926       1    0.990 0.00320        0.984        0.997
-   13    925       5    0.985 0.00398        0.977        0.993
-   14    920       3    0.982 0.00437        0.973        0.990
-   15    917       2    0.980 0.00462        0.971        0.989
-   17    915       1    0.979 0.00474        0.969        0.988
-   23    902       1    0.978 0.00485        0.968        0.987
-   25    898       2    0.975 0.00508        0.965        0.985
-   26    895       2    0.973 0.00530        0.963        0.984
-   28    888       2    0.971 0.00551        0.960        0.982
-   30    883       1    0.970 0.00561        0.959        0.981
-   31    880       1    0.969 0.00571        0.958        0.980
-   32    878       1    0.968 0.00581        0.956        0.979
-   33    876       1    0.967 0.00591        0.955        0.978
-   36    868       1    0.965 0.00601        0.954        0.977
-   42    850       1    0.964 0.00611        0.952        0.976
-   44    846       1    0.963 0.00620        0.951        0.975
-   45    844       1    0.962 0.00630        0.950        0.974
-   57    820       1    0.961 0.00640        0.948        0.973
-   59    816       1    0.960 0.00650        0.947        0.972
-   61    804       1    0.958 0.00660        0.946        0.971
-   70    787       1    0.957 0.00670        0.944        0.970
-   74    767       1    0.956 0.00681        0.943        0.969
-   78    762       1    0.955 0.00692        0.941        0.968
-   79    759       2    0.952 0.00712        0.938        0.966
-   85    753       1    0.951 0.00722        0.937        0.965
-   88    745       1    0.950 0.00733        0.935        0.964
-   90    740       1    0.948 0.00743        0.934        0.963
-   97    720       1    0.947 0.00753        0.932        0.962
-  100    710       1    0.946 0.00764        0.931        0.961
-  139    510       1    0.944 0.00785        0.929        0.959
-  149    436       1    0.942 0.00812        0.926        0.958
-  188    161       1    0.936 0.00996        0.917        0.956
-  251     47       1    0.916 0.02198        0.874        0.960
-  276     35       1    0.890 0.03348        0.827        0.958
+   time n.risk n.event survival std.err lower 95% CI upper 95% CI
+  0.471    934       1    0.999 0.00107        0.997        1.000
+  0.487    933       1    0.998 0.00151        0.995        1.000
+  0.627    932       1    0.997 0.00185        0.993        1.000
+  0.682    931       1    0.996 0.00214        0.992        1.000
+  0.739    930       1    0.995 0.00239        0.990        0.999
+  0.802    929       1    0.994 0.00261        0.988        0.999
+  0.887    928       1    0.993 0.00282        0.987        0.998
+  0.945    927       1    0.991 0.00302        0.986        0.997
+  1.035    926       1    0.990 0.00320        0.984        0.997
+  1.038    925       2    0.988 0.00353        0.981        0.995
+  1.081    923       1    0.987 0.00368        0.980        0.994
+  1.095    922       1    0.986 0.00383        0.979        0.994
+  1.098    921       1    0.985 0.00398        0.977        0.993
+  1.133    920       1    0.984 0.00411        0.976        0.992
+  1.136    919       1    0.983 0.00425        0.975        0.991
+  1.166    918       1    0.982 0.00437        0.973        0.990
+  1.221    917       1    0.981 0.00450        0.972        0.990
+  1.248    916       1    0.980 0.00462        0.971        0.989
+  1.377    915       1    0.979 0.00474        0.969        0.988
+  1.865    902       1    0.978 0.00485        0.968        0.987
+  2.051    898       1    0.976 0.00497        0.967        0.986
+  2.053    897       1    0.975 0.00508        0.965        0.985
+  2.130    895       1    0.974 0.00519        0.964        0.984
+  2.152    892       1    0.973 0.00530        0.963        0.984
+  2.338    887       1    0.972 0.00541        0.962        0.983
+  2.346    886       1    0.971 0.00551        0.960        0.982
+  2.491    882       1    0.970 0.00561        0.959        0.981
+  2.576    879       1    0.969 0.00571        0.958        0.980
+  2.615    878       1    0.968 0.00581        0.956        0.979
+  2.738    874       1    0.967 0.00591        0.955        0.978
+  2.995    864       1    0.965 0.00601        0.954        0.977
+  3.469    850       1    0.964 0.00611        0.952        0.976
+  3.603    846       1    0.963 0.00621        0.951        0.975
+  3.696    844       1    0.962 0.00630        0.950        0.974
+  4.756    819       1    0.961 0.00640        0.948        0.973
+  4.906    811       1    0.960 0.00650        0.947        0.972
+  5.073    804       1    0.958 0.00660        0.946        0.971
+  5.799    787       1    0.957 0.00671        0.944        0.970
+  6.163    765       1    0.956 0.00681        0.943        0.969
+  6.464    760       1    0.955 0.00692        0.941        0.968
+  6.513    759       1    0.953 0.00703        0.940        0.967
+  6.552    758       1    0.952 0.00713        0.938        0.966
+  7.039    752       1    0.951 0.00723        0.937        0.965
+  7.269    744       1    0.950 0.00733        0.935        0.964
+  7.442    739       1    0.948 0.00743        0.934        0.963
+  8.028    720       1    0.947 0.00754        0.932        0.962
+  8.318    705       1    0.946 0.00765        0.931        0.961
+ 11.524    505       1    0.944 0.00786        0.929        0.959
+ 12.348    429       1    0.942 0.00814        0.926        0.958
+ 15.529    160       1    0.936 0.00999        0.916        0.956
+ 20.811     47       1    0.916 0.02199        0.874        0.960
+ 22.883     35       1    0.890 0.03349        0.826        0.958
 
                 rai_recur$sex=M 
- time n.risk n.event survival std.err lower 95% CI upper 95% CI
-    8    246       1    0.996 0.00406        0.988        1.000
-    9    245       1    0.992 0.00573        0.981        1.000
-   11    244       1    0.988 0.00700        0.974        1.000
-   19    242       1    0.984 0.00807        0.968        1.000
-   20    240       1    0.980 0.00902        0.962        0.997
-   24    234       2    0.971 0.01071        0.950        0.992
-   25    232       1    0.967 0.01145        0.945        0.990
-   26    231       1    0.963 0.01214        0.939        0.987
-   29    228       1    0.959 0.01280        0.934        0.984
-   32    225       1    0.954 0.01344        0.928        0.981
-   38    219       1    0.950 0.01407        0.923        0.978
-   41    218       1    0.946 0.01466        0.917        0.975
-   44    216       2    0.937 0.01578        0.907        0.968
-   46    212       2    0.928 0.01682        0.896        0.962
-   49    206       1    0.924 0.01733        0.890        0.958
-   51    204       1    0.919 0.01783        0.885        0.955
-   52    203       1    0.915 0.01831        0.879        0.951
-   53    201       1    0.910 0.01877        0.874        0.948
-   60    188       1    0.905 0.01929        0.868        0.944
-   63    183       1    0.900 0.01981        0.862        0.940
-   71    168       1    0.895 0.02040        0.856        0.936
-  103    145       2    0.882 0.02191        0.841        0.926
-  118    133       1    0.876 0.02272        0.832        0.922
-  138    116       1    0.868 0.02375        0.823        0.916
-  149     92       1    0.859 0.02530        0.811        0.910
-  176     46       1    0.840 0.03088        0.782        0.903</code></pre>
+   time n.risk n.event survival std.err lower 95% CI upper 95% CI
+  0.679    246       1    0.996 0.00406        0.988        1.000
+  0.786    245       1    0.992 0.00573        0.981        1.000
+  0.928    243       1    0.988 0.00701        0.974        1.000
+  1.577    241       1    0.984 0.00809        0.968        1.000
+  1.678    240       1    0.980 0.00903        0.962        0.997
+  2.012    234       1    0.975 0.00992        0.956        0.995
+  2.021    233       1    0.971 0.01072        0.950        0.992
+  2.059    232       1    0.967 0.01146        0.945        0.990
+  2.168    230       1    0.963 0.01216        0.939        0.987
+  2.439    227       1    0.959 0.01283        0.934        0.984
+  2.661    224       1    0.954 0.01346        0.928        0.981
+  3.140    219       1    0.950 0.01409        0.923        0.978
+  3.376    217       1    0.946 0.01469        0.917        0.975
+  3.636    216       1    0.941 0.01526        0.912        0.972
+  3.666    215       1    0.937 0.01580        0.906        0.968
+  3.773    212       1    0.932 0.01634        0.901        0.965
+  3.806    210       1    0.928 0.01685        0.896        0.962
+  4.022    206       1    0.923 0.01736        0.890        0.958
+  4.219    204       1    0.919 0.01786        0.885        0.955
+  4.309    202       1    0.914 0.01834        0.879        0.951
+  4.364    201       1    0.910 0.01880        0.874        0.947
+  4.978    186       1    0.905 0.01933        0.868        0.944
+  5.183    183       1    0.900 0.01984        0.862        0.940
+  5.900    165       1    0.895 0.02046        0.855        0.936
+  8.512    145       1    0.888 0.02123        0.848        0.931
+  8.531    144       1    0.882 0.02196        0.840        0.926
+  9.750    133       1    0.876 0.02277        0.832        0.921
+ 11.392    116       1    0.868 0.02380        0.823        0.916
+ 12.351     89       1    0.858 0.02545        0.810        0.910
+ 14.547     46       1    0.840 0.03099        0.781        0.903</code></pre>
 </div>
 </div>
 </section>
 <section id="summary-기간지정" class="level3">
 <h3 class="anchored" data-anchor-id="summary-기간지정">summary 기간지정</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit, <span class="fu">c</span>(<span class="dv">12</span><span class="sc">*</span><span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>)) <span class="do">### 정해진 time에 맞는 생존테이블표를 만든다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(km_fit, <span class="fu">c</span>(<span class="dv">12</span><span class="sc">*</span><span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>)) <span class="do">### 정해진 time에 맞는 생존테이블표를 만든다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call: survfit(formula = km ~ rai_recur$sex)
 
                 rai_recur$sex=F 
  time n.risk n.event survival std.err lower 95% CI upper 95% CI
-   12    926       9    0.990 0.00320        0.984        0.997
-   24    898      12    0.978 0.00485        0.968        0.987
-   36    868      11    0.965 0.00601        0.954        0.977
-   48    833       3    0.962 0.00630        0.950        0.974
-   60    809       2    0.960 0.00650        0.947        0.972
-   72    777       2    0.957 0.00670        0.944        0.970
-   84    753       4    0.952 0.00712        0.938        0.966
-   96    723       3    0.948 0.00743        0.934        0.963
-  108    687       2    0.946 0.00764        0.931        0.961
-  120    641       0    0.946 0.00764        0.931        0.961
-  132    559       0    0.946 0.00764        0.931        0.961
-  144    474       1    0.944 0.00785        0.929        0.959
-  156    373       1    0.942 0.00812        0.926        0.958
-  168    297       0    0.942 0.00812        0.926        0.958
-  180    189       0    0.942 0.00812        0.926        0.958
-  192    143       1    0.936 0.00996        0.917        0.956
-  204    113       0    0.936 0.00996        0.917        0.956
-  216     88       0    0.936 0.00996        0.917        0.956
-  228     63       0    0.936 0.00996        0.917        0.956
+   12    464      49    0.944 0.00786        0.929        0.959
+   24     27       4    0.890 0.03349        0.826        0.958
 
                 rai_recur$sex=M 
  time n.risk n.event survival std.err lower 95% CI upper 95% CI
-   12    242       3    0.988  0.0070        0.974        1.000
-   24    234       4    0.971  0.0107        0.950        0.992
-   36    220       4    0.954  0.0134        0.928        0.981
-   48    208       6    0.928  0.0168        0.896        0.962
-   60    188       5    0.905  0.0193        0.868        0.944
-   72    164       2    0.895  0.0204        0.856        0.936
-   84    157       0    0.895  0.0204        0.856        0.936
-   96    146       0    0.895  0.0204        0.856        0.936
-  108    137       2    0.882  0.0219        0.841        0.926
-  120    131       1    0.876  0.0227        0.832        0.922
-  132    122       0    0.876  0.0227        0.832        0.922
-  144    105       1    0.868  0.0237        0.823        0.916
-  156     75       1    0.859  0.0253        0.811        0.910
-  168     54       0    0.859  0.0253        0.811        0.910
-  180     40       1    0.840  0.0309        0.782        0.903
-  192     33       0    0.840  0.0309        0.782        0.903
-  204     26       0    0.840  0.0309        0.782        0.903
-  216     19       0    0.840  0.0309        0.782        0.903
-  228     15       0    0.840  0.0309        0.782        0.903</code></pre>
+   12    102      28    0.868  0.0238        0.823        0.916
+   24      7       2    0.840  0.0310        0.781        0.903</code></pre>
 </div>
 </div>
 </section>
 <section id="plot-그래프---범례추가" class="level3">
 <h3 class="anchored" data-anchor-id="plot-그래프---범례추가">plot 그래프 - 범례추가</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="at">col=</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km_fit, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="at">col=</span> <span class="fu">rainbow</span>(<span class="dv">2</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -710,7 +708,7 @@ NA </code></pre>
 <section id="ggsurvplot---risk.table-추가하기" class="level3">
 <h3 class="anchored" data-anchor-id="ggsurvplot---risk.table-추가하기">ggsurvplot - risk.table 추가하기</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: ggplot2</code></pre>
 </div>
@@ -726,20 +724,20 @@ Attaching package: 'survminer'</code></pre>
 
     myeloma</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  km_fit, </span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> rai_recur,</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> T, </span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xscale =</span> <span class="dv">12</span>, <span class="do">## xscale can be "d_y"</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">break.x.by =</span> <span class="dv">5</span><span class="sc">*</span><span class="dv">12</span>,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval =</span> T, </span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval.size =</span><span class="dv">4</span>, </span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">surv.median.line =</span> <span class="st">"hv"</span>,</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>, <span class="do">## if TRUE, risk table is displayed under graph</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="st">"sex"</span>, </span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.labs=</span><span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#E7B800"</span>, <span class="st">"#2E9FDF"</span>),</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  km_fit, </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> rai_recur,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> T, </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xscale =</span> <span class="dv">12</span>, <span class="do">## xscale can be "d_y"</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">break.x.by =</span> <span class="dv">5</span><span class="sc">*</span><span class="dv">12</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval =</span> T, </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval.size =</span><span class="dv">4</span>, </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">surv.median.line =</span> <span class="st">"hv"</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>, <span class="do">## if TRUE, risk table is displayed under graph</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="st">"sex"</span>, </span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.labs=</span><span class="fu">c</span>(<span class="st">"Female"</span>,<span class="st">"Male"</span>),</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#E7B800"</span>, <span class="st">"#2E9FDF"</span>),</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in .add_surv_median(p, fit, type = surv.median.line, fun = fun, :
 Median survival not reached.</code></pre>
@@ -762,8 +760,8 @@ Median survival not reached.</code></pre>
 h(t | X) = h_0(t) \exp(\beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p)
 \]</span> #### sex에 대한 단변량</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>univariate_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(km <span class="sc">~</span> sex, <span class="at">data =</span> rai_recur)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(univariate_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>univariate_model <span class="ot">&lt;-</span> <span class="fu">coxph</span>(km <span class="sc">~</span> sex, <span class="at">data =</span> rai_recur)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(univariate_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 coxph(formula = km ~ sex, data = rai_recur)
@@ -771,17 +769,17 @@ coxph(formula = km ~ sex, data = rai_recur)
   n= 1180, number of events= 83 
 
        coef exp(coef) se(coef)     z Pr(&gt;|z|)    
-sexM 0.8430    2.3233   0.2287 3.686 0.000228 ***
+sexM 0.8441    2.3258   0.2287 3.691 0.000224 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
      exp(coef) exp(-coef) lower .95 upper .95
-sexM     2.323     0.4304     1.484     3.637
+sexM     2.326       0.43     1.486     3.641
 
 Concordance= 0.58  (se = 0.027 )
-Likelihood ratio test= 12.29  on 1 df,   p=5e-04
-Wald test            = 13.59  on 1 df,   p=2e-04
-Score (logrank) test = 14.41  on 1 df,   p=1e-04</code></pre>
+Likelihood ratio test= 12.32  on 1 df,   p=4e-04
+Wald test            = 13.62  on 1 df,   p=2e-04
+Score (logrank) test = 14.44  on 1 df,   p=1e-04</code></pre>
 </div>
 </div>
 <section id="검정-방법의-차이" class="level4">
@@ -828,37 +826,37 @@ Score (logrank) test = 14.41  on 1 df,   p=1e-04</code></pre>
 <section id="cox-단변량-반복" class="level3">
 <h3 class="anchored" data-anchor-id="cox-단변량-반복">cox 단변량 반복</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(year, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  mycph : perform coxph of individual expecting variables
 
- Call: Surv(time, recur) ~ sex + surgeon + Risk + pT + gross_ETE + pN +     ENE, data= rai_recur </code></pre>
+ Call: Surv(year, recur) ~ sex + surgeon + Risk + pT + gross_ETE + pN +     ENE, data= rai_recur </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     HR   lcl    ucl     p
-sexM               2.32  1.48   3.64 0.000
-surgeonGS          8.87  0.92  85.71 0.059
+sexM               2.33  1.49   3.64 0.000
+surgeonGS          8.85  0.92  85.51 0.060
 surgeonKCCH        2.50  0.23  27.64 0.454
-surgeonLBC         3.88  0.47  32.25 0.209
-surgeonLGH         4.44  0.61  32.63 0.142
-surgeonLMC         3.05  0.38  24.40 0.293
-surgeonLYS        11.07  1.29  95.20 0.028
-surgeonOKK        18.73  1.67 209.73 0.017
-surgeonoutside    19.61  2.64 145.48 0.004
-surgeonSYS         3.13  0.35  28.06 0.309
+surgeonLBC         3.88  0.47  32.21 0.210
+surgeonLGH         4.44  0.61  32.62 0.143
+surgeonLMC         3.05  0.38  24.42 0.293
+surgeonLYS        11.03  1.28  94.82 0.029
+surgeonOKK        18.68  1.67 209.14 0.018
+surgeonoutside    19.57  2.64 145.20 0.004
+surgeonSYS         3.12  0.35  27.98 0.310
 RiskIntermediate   0.39  0.25   0.62 0.000
 RiskLow            0.08  0.03   0.19 0.000
 pTT1b              2.65  1.37   5.12 0.004
 pTT2               5.63  2.77  11.42 0.000
-pTT3a              7.86  2.98  20.75 0.000
-pTT3b              4.04  1.53  10.64 0.005
-pTT4a             12.51  5.47  28.57 0.000
-pTT4b            110.48 14.15 862.67 0.000
-gross_ETEY         3.01  1.74   5.19 0.000
+pTT3a              7.85  2.98  20.72 0.000
+pTT3b              4.04  1.54  10.64 0.005
+pTT4a             12.51  5.48  28.59 0.000
+pTT4b            114.63 14.66 896.61 0.000
+gross_ETEY         3.01  1.74   5.20 0.000
 pNN1a              2.89  1.40   5.96 0.004
-pNN1b              5.88  2.80  12.36 0.000
-pNNx               1.92  0.58   6.34 0.285
+pNN1b              5.90  2.80  12.39 0.000
+pNNx               1.92  0.58   6.33 0.286
 ENEY               2.96  1.76   4.97 0.000</code></pre>
 </div>
 </div>
@@ -866,71 +864,71 @@ ENEY               2.96  1.76   4.97 0.000</code></pre>
 <section id="multivariate-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-analysis">Multivariate Analysis</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cox_model1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>cox_model1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(year, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
-coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk + pT + 
+coxph(formula = Surv(year, recur) ~ sex + surgeon + Risk + pT + 
     gross_ETE + pN + ENE, data = rai_recur)
 
   n= 1180, number of events= 83 
 
                      coef exp(coef) se(coef)      z Pr(&gt;|z|)   
-sexM              0.45143   1.57055  0.25124  1.797  0.07237 . 
-surgeonGS         1.82111   6.17873  1.17355  1.552  0.12071   
-surgeonKCCH       0.84534   2.32877  1.23979  0.682  0.49534   
-surgeonLBC        1.33518   3.80069  1.08259  1.233  0.21746   
-surgeonLGH        1.39732   4.04434  1.02052  1.369  0.17093   
-surgeonLMC        0.96762   2.63166  1.06429  0.909  0.36326   
-surgeonLYS        2.35394  10.52698  1.12773  2.087  0.03686 * 
-surgeonOKK        2.41672  11.20906  1.24459  1.942  0.05216 . 
-surgeonoutside    2.53862  12.66221  1.02984  2.465  0.01370 * 
-surgeonSYS        1.21122   3.35757  1.12605  1.076  0.28209   
-RiskIntermediate -1.10109   0.33251  0.48798 -2.256  0.02404 * 
-RiskLow          -1.94527   0.14295  0.69673 -2.792  0.00524 **
-pTT1b             0.27864   1.32134  0.39790  0.700  0.48375   
-pTT2              0.93086   2.53669  0.41840  2.225  0.02610 * 
-pTT3a             1.33031   3.78220  0.56006  2.375  0.01753 * 
-pTT3b            -0.01178   0.98829  0.78975 -0.015  0.98810   
-pTT4a             0.68142   1.97669  0.73389  0.929  0.35315   
-pTT4b             2.56213  12.96338  1.41329  1.813  0.06985 . 
-gross_ETEY       -0.02956   0.97087  0.70231 -0.042  0.96643   
-pNN1a             0.68781   1.98935  0.38041  1.808  0.07059 . 
-pNN1b             0.87216   2.39207  0.41729  2.090  0.03661 * 
-pNNx             -0.27631   0.75858  0.63063 -0.438  0.66128   
-ENEY             -0.53707   0.58446  0.46306 -1.160  0.24612   
+sexM              0.45192   1.57132  0.25127  1.799   0.0721 . 
+surgeonGS         1.81886   6.16480  1.17357  1.550   0.1212   
+surgeonKCCH       0.84893   2.33715  1.23980  0.685   0.4935   
+surgeonLBC        1.33508   3.80032  1.08260  1.233   0.2175   
+surgeonLGH        1.39721   4.04391  1.02051  1.369   0.1710   
+surgeonLMC        0.96942   2.63642  1.06427  0.911   0.3624   
+surgeonLYS        2.34483  10.43154  1.12779  2.079   0.0376 * 
+surgeonOKK        2.41287  11.16598  1.24462  1.939   0.0525 . 
+surgeonoutside    2.53598  12.62882  1.02984  2.462   0.0138 * 
+surgeonSYS        1.20834   3.34793  1.12607  1.073   0.2832   
+RiskIntermediate -1.09751   0.33370  0.48753 -2.251   0.0244 * 
+RiskLow          -1.94194   0.14343  0.69644 -2.788   0.0053 **
+pTT1b             0.28007   1.32322  0.39789  0.704   0.4815   
+pTT2              0.93166   2.53872  0.41843  2.227   0.0260 * 
+pTT3a             1.32880   3.77652  0.56010  2.372   0.0177 * 
+pTT3b            -0.01607   0.98406  0.78952 -0.020   0.9838   
+pTT4a             0.67540   1.96483  0.73278  0.922   0.3567   
+pTT4b             2.59970  13.45964  1.41428  1.838   0.0660 . 
+gross_ETEY       -0.02057   0.97964  0.70045 -0.029   0.9766   
+pNN1a             0.68860   1.99093  0.38044  1.810   0.0703 . 
+pNN1b             0.87319   2.39453  0.41736  2.092   0.0364 * 
+pNNx             -0.27660   0.75835  0.63071 -0.439   0.6610   
+ENEY             -0.53475   0.58582  0.46258 -1.156   0.2477   
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
                  exp(coef) exp(-coef) lower .95 upper .95
-sexM                1.5706    0.63672   0.95983    2.5699
-surgeonGS           6.1787    0.16185   0.61940   61.6354
-surgeonKCCH         2.3288    0.42941   0.20503   26.4507
-surgeonLBC          3.8007    0.26311   0.45537   31.7224
-surgeonLGH          4.0443    0.24726   0.54724   29.8895
-surgeonLMC          2.6317    0.37999   0.32682   21.1911
-surgeonLYS         10.5270    0.09499   1.15445   95.9916
-surgeonOKK         11.2091    0.08921   0.97762  128.5198
-surgeonoutside     12.6622    0.07898   1.68232   95.3038
-surgeonSYS          3.3576    0.29783   0.36943   30.5153
-RiskIntermediate    0.3325    3.00745   0.12777    0.8653
-RiskLow             0.1429    6.99550   0.03649    0.5601
-pTT1b               1.3213    0.75681   0.60578    2.8821
-pTT2                2.5367    0.39422   1.11717    5.7599
-pTT3a               3.7822    0.26440   1.26190   11.3361
-pTT3b               0.9883    1.01185   0.21021    4.6465
-pTT4a               1.9767    0.50590   0.46908    8.3297
-pTT4b              12.9634    0.07714   0.81232  206.8754
-gross_ETEY          0.9709    1.03000   0.24511    3.8457
-pNN1a               1.9894    0.50268   0.94386    4.1929
-pNN1b               2.3921    0.41805   1.05579    5.4196
-pNNx                0.7586    1.31826   0.22040    2.6109
-ENEY                0.5845    1.71098   0.23583    1.4485
+sexM                1.5713    0.63641   0.96026    2.5712
+surgeonGS           6.1648    0.16221   0.61798   61.4985
+surgeonKCCH         2.3371    0.42787   0.20576   26.5465
+surgeonLBC          3.8003    0.26314   0.45531   31.7200
+surgeonLGH          4.0439    0.24729   0.54720   29.8853
+surgeonLMC          2.6364    0.37930   0.32742   21.2288
+surgeonLYS         10.4315    0.09586   1.14386   95.1311
+surgeonOKK         11.1660    0.08956   0.97381  128.0316
+surgeonoutside     12.6288    0.07918   1.67787   95.0535
+surgeonSYS          3.3479    0.29869   0.36835   30.4291
+RiskIntermediate    0.3337    2.99668   0.12834    0.8677
+RiskLow             0.1434    6.97227   0.03663    0.5616
+pTT1b               1.3232    0.75573   0.60666    2.8862
+pTT2                2.5387    0.39390   1.11802    5.7647
+pTT3a               3.7765    0.26479   1.25988   11.3202
+pTT3b               0.9841    1.01620   0.20940    4.6245
+pTT4a               1.9648    0.50895   0.46729    8.2616
+pTT4b              13.4596    0.07430   0.84178  215.2125
+gross_ETEY          0.9796    1.02079   0.24822    3.8663
+pNN1a               1.9909    0.50228   0.94455    4.1965
+pNN1b               2.3945    0.41762   1.05673    5.4260
+pNNx                0.7584    1.31864   0.22030    2.6105
+ENEY                0.5858    1.70702   0.23660    1.4505
 
 Concordance= 0.792  (se = 0.024 )
-Likelihood ratio test= 112.5  on 23 df,   p=9e-14
+Likelihood ratio test= 112.4  on 23 df,   p=9e-14
 Wald test            = 110.8  on 23 df,   p=2e-13
-Score (logrank) test = 176.7  on 23 df,   p=&lt;2e-16</code></pre>
+Score (logrank) test = 177.9  on 23 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 </section>
@@ -942,21 +940,21 @@ Score (logrank) test = 176.7  on 23 df,   p=&lt;2e-16</code></pre>
 <li>Deviance 값이 크고 p-value가 낮은 변수는 중요한 변수이며, p-value가 높으면 제거를 고려할 수 있음.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
- Cox model: response is Surv(time, recur)
+ Cox model: response is Surv(year, recur)
 Terms added sequentially (first to last)
 
            loglik   Chisq Df Pr(&gt;|Chi|)    
-NULL      -567.06                          
-sex       -560.92 12.2949  1  0.0004542 ***
-surgeon   -540.38 41.0665  9  4.864e-06 ***
-Risk      -521.33 38.1136  2  5.293e-09 ***
-pT        -515.05 12.5592  6  0.0505954 .  
-gross_ETE -515.03  0.0306  1  0.8610979    
-pN        -511.51  7.0409  3  0.0706054 .  
-ENE       -510.84  1.3484  1  0.2455630    
+NULL      -566.92                          
+sex       -560.76 12.3242  1  0.0004471 ***
+surgeon   -540.28 40.9446  9  5.119e-06 ***
+Risk      -521.23 38.1167  2  5.285e-09 ***
+pT        -514.92 12.6184  6  0.0495130 *  
+gross_ETE -514.90  0.0331  1  0.8557130    
+pN        -511.37  7.0630  3  0.0699151 .  
+ENE       -510.70  1.3395  1  0.2471225    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -975,56 +973,56 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="multivariate---refit" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate---refit">Multivariate - refit</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk, <span class="at">data =</span> rai_recur)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(year, recur) <span class="sc">~</span> sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk, <span class="at">data =</span> rai_recur)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
-coxph(formula = Surv(time, recur) ~ sex + surgeon + Risk, data = rai_recur)
+coxph(formula = Surv(year, recur) ~ sex + surgeon + Risk, data = rai_recur)
 
   n= 1180, number of events= 83 
 
                     coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-sexM              0.4982    1.6457   0.2395  2.080 0.037565 *  
-surgeonGS         2.1328    8.4382   1.1591  1.840 0.065765 .  
-surgeonKCCH       1.0549    2.8717   1.2288  0.859 0.390615    
-surgeonLBC        1.4876    4.4264   1.0806  1.377 0.168610    
-surgeonLGH        1.4732    4.3630   1.0184  1.447 0.148017    
-surgeonLMC        1.0942    2.9867   1.0618  1.030 0.302797    
-surgeonLYS        2.4262   11.3163   1.0983  2.209 0.027169 *  
-surgeonOKK        2.7836   16.1772   1.2349  2.254 0.024193 *  
-surgeonoutside    2.7641   15.8650   1.0244  2.698 0.006967 ** 
-surgeonSYS        1.3356    3.8024   1.1204  1.192 0.233240    
-RiskIntermediate -0.9051    0.4045   0.2375 -3.811 0.000139 ***
-RiskLow          -2.2999    0.1003   0.4506 -5.105 3.31e-07 ***
+sexM              0.4974    1.6445   0.2396  2.076 0.037914 *  
+surgeonGS         2.1298    8.4133   1.1591  1.837 0.066149 .  
+surgeonKCCH       1.0572    2.8784   1.2288  0.860 0.389573    
+surgeonLBC        1.4877    4.4270   1.0806  1.377 0.168570    
+surgeonLGH        1.4732    4.3631   1.0184  1.447 0.148007    
+surgeonLMC        1.0960    2.9921   1.0618  1.032 0.302003    
+surgeonLYS        2.4214   11.2616   1.0983  2.205 0.027482 *  
+surgeonOKK        2.7801   16.1209   1.2350  2.251 0.024373 *  
+surgeonoutside    2.7609   15.8134   1.0244  2.695 0.007036 ** 
+surgeonSYS        1.3326    3.7911   1.1205  1.189 0.234299    
+RiskIntermediate -0.9041    0.4049   0.2375 -3.806 0.000141 ***
+RiskLow          -2.3005    0.1002   0.4506 -5.105  3.3e-07 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
                  exp(coef) exp(-coef) lower .95 upper .95
-sexM                1.6457    0.60765   1.02906    2.6318
-surgeonGS           8.4382    0.11851   0.87021   81.8234
-surgeonKCCH         2.8717    0.34822   0.25835   31.9211
-surgeonLBC          4.4264    0.22592   0.53245   36.7971
-surgeonLGH          4.3630    0.22920   0.59284   32.1094
-surgeonLMC          2.9867    0.33482   0.37270   23.9346
-surgeonLYS         11.3163    0.08837   1.31470   97.4044
-surgeonOKK         16.1772    0.06182   1.43790  182.0038
-surgeonoutside     15.8650    0.06303   2.13064  118.1329
-surgeonSYS          3.8024    0.26299   0.42299   34.1799
-RiskIntermediate    0.4045    2.47207   0.25397    0.6443
-RiskLow             0.1003    9.97356   0.04146    0.2425
+sexM                1.6445    0.60809   1.02814    2.6304
+surgeonGS           8.4133    0.11886   0.86757   81.5871
+surgeonKCCH         2.8784    0.34741   0.25894   31.9967
+surgeonLBC          4.4270    0.22588   0.53252   36.8035
+surgeonLGH          4.3631    0.22919   0.59286   32.1096
+surgeonLMC          2.9921    0.33422   0.37337   23.9773
+surgeonLYS         11.2616    0.08880   1.30826   96.9397
+surgeonOKK         16.1209    0.06203   1.43284  181.3763
+surgeonoutside     15.8134    0.06324   2.12357  117.7565
+surgeonSYS          3.7911    0.26378   0.42171   34.0811
+RiskIntermediate    0.4049    2.46968   0.25421    0.6450
+RiskLow             0.1002    9.97918   0.04143    0.2424
 
 Concordance= 0.761  (se = 0.025 )
-Likelihood ratio test= 91.47  on 12 df,   p=3e-14
-Wald test            = 86.44  on 12 df,   p=2e-13
-Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
+Likelihood ratio test= 91.39  on 12 df,   p=3e-14
+Wald test            = 86.33  on 12 df,   p=3e-13
+Score (logrank) test = 114.1  on 12 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 </section>
 <section id="survfit-plot" class="level3">
 <h3 class="anchored" data-anchor-id="survfit-plot">survfit plot</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(cox_model1), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.6</span>,<span class="dv">1</span>),<span class="at">xlab =</span> <span class="st">"months"</span>,</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Proportion not reached"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">survfit</span>(cox_model1), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.6</span>,<span class="dv">1</span>),<span class="at">xlab =</span> <span class="st">"months"</span>,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Proportion not reached"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1037,10 +1035,10 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 </section>
 <section id="잔차분석" class="level2">
 <h2 class="anchored" data-anchor-id="잔차분석">잔차분석</h2>
-<section id="time-histogram" class="level3">
-<h3 class="anchored" data-anchor-id="time-histogram">time histogram</h3>
+<section id="year-histogram" class="level3">
+<h3 class="anchored" data-anchor-id="year-histogram">year histogram</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(time<span class="sc">/</span><span class="dv">12</span>, <span class="at">breaks =</span> <span class="dv">40</span>, <span class="at">main =</span> <span class="st">"Histogram of time"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(year, <span class="at">breaks =</span> <span class="dv">40</span>, <span class="at">main =</span> <span class="st">"Histogram of year"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1053,7 +1051,7 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="age-histogram" class="level3">
 <h3 class="anchored" data-anchor-id="age-histogram">age histogram</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(age, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(age, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1066,7 +1064,7 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="size-histogram" class="level3">
 <h3 class="anchored" data-anchor-id="size-histogram">size histogram</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(size, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(rai_recur, <span class="fu">hist</span>(size, <span class="at">breaks =</span> <span class="dv">16</span>, <span class="at">main =</span> <span class="st">"Histogram of age"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1079,9 +1077,9 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="age-residual" class="level3">
 <h3 class="anchored" data-anchor-id="age-residual">age residual</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time,recur)<span class="sc">~</span><span class="dv">1</span>,<span class="at">data =</span> rai_recur)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>resid <span class="ot">&lt;-</span> <span class="fu">residuals</span>(m1, <span class="at">type =</span> <span class="st">"martingale"</span>)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(year,recur)<span class="sc">~</span><span class="dv">1</span>,<span class="at">data =</span> rai_recur)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>resid <span class="ot">&lt;-</span> <span class="fu">residuals</span>(m1, <span class="at">type =</span> <span class="st">"martingale"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
 </div>
@@ -1094,12 +1092,12 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 25.02.17 추가</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># chatGPT 답변에 따라 age를 공변량으로 한후 risk를 predict하여 그래프화</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time,recur)<span class="sc">~</span>age,<span class="at">data =</span> rai_recur)</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>predicted_hr <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2, <span class="at">type =</span> <span class="st">"risk"</span>)</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,predicted_hr))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 25.02.17 추가</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># chatGPT 답변에 따라 age를 공변량으로 한후 risk를 predict하여 그래프화</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(year,recur)<span class="sc">~</span>age,<span class="at">data =</span> rai_recur)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>rai_recur<span class="sc">$</span>predicted_hr <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2, <span class="at">type =</span> <span class="st">"risk"</span>)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(age,predicted_hr))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
 </div>
@@ -1115,7 +1113,7 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="size-residual" class="level3">
 <h3 class="anchored" data-anchor-id="size-residual">size residual</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(size,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>rai_recur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(size,resid))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_smooth</span>()<span class="sc">+</span><span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
 </div>
@@ -1134,39 +1132,39 @@ Score (logrank) test = 114.2  on 12 df,   p=&lt;2e-16</code></pre>
 <section id="cox-단변량-반복2" class="level3">
 <h3 class="anchored" data-anchor-id="cox-단변량-반복2">cox 단변량 반복2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mycph</span>(<span class="fu">Surv</span>(year, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  mycph : perform coxph of individual expecting variables
 
- Call: Surv(time, recur) ~ age + sex + surgeon + Risk + pT + size +     gross_ETE + pN + ENE, data= rai_recur </code></pre>
+ Call: Surv(year, recur) ~ age + sex + surgeon + Risk + pT + size +     gross_ETE + pN + ENE, data= rai_recur </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     HR   lcl    ucl     p
 age                0.96  0.94   0.98 0.000
-sexM               2.32  1.48   3.64 0.000
-surgeonGS          8.87  0.92  85.71 0.059
+sexM               2.33  1.49   3.64 0.000
+surgeonGS          8.85  0.92  85.51 0.060
 surgeonKCCH        2.50  0.23  27.64 0.454
-surgeonLBC         3.88  0.47  32.25 0.209
-surgeonLGH         4.44  0.61  32.63 0.142
-surgeonLMC         3.05  0.38  24.40 0.293
-surgeonLYS        11.07  1.29  95.20 0.028
-surgeonOKK        18.73  1.67 209.73 0.017
-surgeonoutside    19.61  2.64 145.48 0.004
-surgeonSYS         3.13  0.35  28.06 0.309
+surgeonLBC         3.88  0.47  32.21 0.210
+surgeonLGH         4.44  0.61  32.62 0.143
+surgeonLMC         3.05  0.38  24.42 0.293
+surgeonLYS        11.03  1.28  94.82 0.029
+surgeonOKK        18.68  1.67 209.14 0.018
+surgeonoutside    19.57  2.64 145.20 0.004
+surgeonSYS         3.12  0.35  27.98 0.310
 RiskIntermediate   0.39  0.25   0.62 0.000
 RiskLow            0.08  0.03   0.19 0.000
 pTT1b              2.65  1.37   5.12 0.004
 pTT2               5.63  2.77  11.42 0.000
-pTT3a              7.86  2.98  20.75 0.000
-pTT3b              4.04  1.53  10.64 0.005
-pTT4a             12.51  5.47  28.57 0.000
-pTT4b            110.48 14.15 862.67 0.000
+pTT3a              7.85  2.98  20.72 0.000
+pTT3b              4.04  1.54  10.64 0.005
+pTT4a             12.51  5.48  28.59 0.000
+pTT4b            114.63 14.66 896.61 0.000
 size               1.61  1.43   1.81 0.000
-gross_ETEY         3.01  1.74   5.19 0.000
+gross_ETEY         3.01  1.74   5.20 0.000
 pNN1a              2.89  1.40   5.96 0.004
-pNN1b              5.88  2.80  12.36 0.000
-pNNx               1.92  0.58   6.34 0.285
+pNN1b              5.90  2.80  12.39 0.000
+pNNx               1.92  0.58   6.33 0.286
 ENEY               2.96  1.76   4.97 0.000</code></pre>
 </div>
 </div>
@@ -1174,98 +1172,98 @@ ENEY               2.96  1.76   4.97 0.000</code></pre>
 <section id="multivariate-analysis-2" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-analysis-2">Multivariate Analysis 2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>cox_model2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>cox_model2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(year, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>pT<span class="sc">+</span>size<span class="sc">+</span>gross_ETE<span class="sc">+</span>pN<span class="sc">+</span>ENE, <span class="at">data =</span> rai_recur)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
-coxph(formula = Surv(time, recur) ~ age + sex + surgeon + Risk + 
+coxph(formula = Surv(year, recur) ~ age + sex + surgeon + Risk + 
     pT + size + gross_ETE + pN + ENE, data = rai_recur)
 
   n= 1180, number of events= 83 
 
                       coef exp(coef)  se(coef)      z Pr(&gt;|z|)   
-age              -0.014008  0.986090  0.009941 -1.409  0.15880   
-sexM              0.328854  1.389375  0.258244  1.273  0.20287   
-surgeonGS         1.671413  5.319680  1.179586  1.417  0.15650   
-surgeonKCCH       1.142594  3.134888  1.247675  0.916  0.35978   
-surgeonLBC        1.494638  4.457724  1.085987  1.376  0.16873   
-surgeonLGH        1.553412  4.727573  1.024719  1.516  0.12953   
-surgeonLMC        1.203669  3.332322  1.068352  1.127  0.25989   
-surgeonLYS        2.388710 10.899427  1.131419  2.111  0.03475 * 
-surgeonOKK        2.472220 11.848726  1.248650  1.980  0.04771 * 
-surgeonoutside    2.607921 13.570810  1.031837  2.527  0.01149 * 
-surgeonSYS        1.392094  4.023265  1.130279  1.232  0.21808   
-RiskIntermediate -1.097029  0.333862  0.461238 -2.378  0.01739 * 
-RiskLow          -1.946380  0.142790  0.676862 -2.876  0.00403 **
-pTT1b            -0.011762  0.988307  0.407939 -0.029  0.97700   
-pTT2              0.151581  1.163673  0.485457  0.312  0.75485   
-pTT3a            -0.302922  0.738657  0.805684 -0.376  0.70693   
-pTT3b            -0.772746  0.461743  0.853145 -0.906  0.36506   
-pTT4a            -0.260828  0.770414  0.792535 -0.329  0.74208   
-pTT4b             1.765631  5.845260  1.428885  1.236  0.21658   
-size              0.380317  1.462748  0.123769  3.073  0.00212 **
-gross_ETEY        0.317829  1.374141  0.687014  0.463  0.64363   
-pNN1a             0.671573  1.957313  0.384123  1.748  0.08041 . 
-pNN1b             0.778179  2.177504  0.421857  1.845  0.06509 . 
-pNNx             -0.633082  0.530953  0.648227 -0.977  0.32875   
-ENEY             -0.526398  0.590729  0.448249 -1.174  0.24026   
+age              -0.013928  0.986169  0.009935 -1.402  0.16093   
+sexM              0.330204  1.391252  0.258096  1.279  0.20076   
+surgeonGS         1.670471  5.314669  1.179516  1.416  0.15671   
+surgeonKCCH       1.145340  3.143511  1.247690  0.918  0.35864   
+surgeonLBC        1.493815  4.454057  1.085967  1.376  0.16896   
+surgeonLGH        1.552948  4.725378  1.024671  1.516  0.12963   
+surgeonLMC        1.205261  3.337630  1.068339  1.128  0.25925   
+surgeonLYS        2.377146 10.774114  1.131607  2.101  0.03567 * 
+surgeonOKK        2.469004 11.810683  1.248617  1.977  0.04800 * 
+surgeonoutside    2.605357 13.536063  1.031762  2.525  0.01156 * 
+surgeonSYS        1.388729  4.009751  1.130281  1.229  0.21920   
+RiskIntermediate -1.090421  0.336075  0.460789 -2.366  0.01796 * 
+RiskLow          -1.939432  0.143786  0.676496 -2.867  0.00415 **
+pTT1b            -0.008589  0.991448  0.407793 -0.021  0.98320   
+pTT2              0.154961  1.167612  0.485155  0.319  0.74942   
+pTT3a            -0.298193  0.742158  0.804497 -0.371  0.71089   
+pTT3b            -0.778079  0.459287  0.852804 -0.912  0.36157   
+pTT4a            -0.267372  0.765388  0.790730 -0.338  0.73526   
+pTT4b             1.803850  6.072983  1.430270  1.261  0.20724   
+size              0.379059  1.460909  0.123512  3.069  0.00215 **
+gross_ETEY        0.331259  1.392721  0.684678  0.484  0.62852   
+pNN1a             0.673697  1.961476  0.384246  1.753  0.07955 . 
+pNN1b             0.781190  2.184070  0.421923  1.852  0.06410 . 
+pNNx             -0.629858  0.532668  0.648011 -0.972  0.33106   
+ENEY             -0.521020  0.593914  0.447732 -1.164  0.24455   
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
                  exp(coef) exp(-coef) lower .95 upper .95
-age                 0.9861    1.01411   0.96706    1.0055
-sexM                1.3894    0.71975   0.83753    2.3048
-surgeonGS           5.3197    0.18798   0.52701   53.6972
-surgeonKCCH         3.1349    0.31899   0.27177   36.1614
-surgeonLBC          4.4577    0.22433   0.53054   37.4547
-surgeonLGH          4.7276    0.21153   0.63445   35.2274
-surgeonLMC          3.3323    0.30009   0.41055   27.0477
-surgeonLYS         10.8994    0.09175   1.18669  100.1081
-surgeonOKK         11.8487    0.08440   1.02522  136.9381
-surgeonoutside     13.5708    0.07369   1.79599  102.5433
-surgeonSYS          4.0233    0.24855   0.43902   36.8700
-RiskIntermediate    0.3339    2.99525   0.13519    0.8245
-RiskLow             0.1428    7.00329   0.03789    0.5381
-pTT1b               0.9883    1.01183   0.44428    2.1985
-pTT2                1.1637    0.85935   0.44938    3.0134
-pTT3a               0.7387    1.35381   0.15228    3.5830
-pTT3b               0.4617    2.16571   0.08674    2.4581
-pTT4a               0.7704    1.29800   0.16297    3.6419
-pTT4b               5.8453    0.17108   0.35525   96.1773
-size                1.4627    0.68364   1.14767    1.8643
-gross_ETEY          1.3741    0.72773   0.35747    5.2823
-pNN1a               1.9573    0.51090   0.92192    4.1555
-pNN1b               2.1775    0.45924   0.95252    4.9779
-pNNx                0.5310    1.88341   0.14903    1.8916
-ENEY                0.5907    1.69282   0.24538    1.4221
+age                 0.9862    1.01403   0.96715    1.0056
+sexM                1.3913    0.71878   0.83891    2.3073
+surgeonGS           5.3147    0.18816   0.52659   53.6392
+surgeonKCCH         3.1435    0.31812   0.27251   36.2619
+surgeonLBC          4.4541    0.22451   0.53013   37.4225
+surgeonLGH          4.7254    0.21162   0.63421   35.2078
+surgeonLMC          3.3376    0.29961   0.41121   27.0900
+surgeonLYS         10.7741    0.09282   1.17262   98.9937
+surgeonOKK         11.8107    0.08467   1.02200  136.4897
+surgeonoutside     13.5361    0.07388   1.79166  102.2657
+surgeonSYS          4.0098    0.24939   0.43754   36.7464
+RiskIntermediate    0.3361    2.97553   0.13621    0.8292
+RiskLow             0.1438    6.95480   0.03818    0.5414
+pTT1b               0.9914    1.00863   0.44582    2.2049
+pTT2                1.1676    0.85645   0.45116    3.0218
+pTT3a               0.7422    1.34742   0.15336    3.5916
+pTT3b               0.4593    2.17729   0.08633    2.4434
+pTT4a               0.7654    1.30653   0.16248    3.6054
+pTT4b               6.0730    0.16466   0.36809  100.1960
+size                1.4609    0.68451   1.14680    1.8610
+gross_ETEY          1.3927    0.71802   0.36397    5.3292
+pNN1a               1.9615    0.50982   0.92366    4.1654
+pNN1b               2.1841    0.45786   0.95527    4.9935
+pNNx                0.5327    1.87734   0.14958    1.8969
+ENEY                0.5939    1.68374   0.24695    1.4283
 
 Concordance= 0.8  (se = 0.025 )
-Likelihood ratio test= 123.5  on 25 df,   p=5e-15
-Wald test            = 128  on 25 df,   p=9e-16
-Score (logrank) test = 201.3  on 25 df,   p=&lt;2e-16</code></pre>
+Likelihood ratio test= 123.4  on 25 df,   p=5e-15
+Wald test            = 127.9  on 25 df,   p=9e-16
+Score (logrank) test = 202.3  on 25 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
 </section>
 <section id="multivariate---anova-2" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate---anova-2">Multivariate - anova 2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cox_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
- Cox model: response is Surv(time, recur)
+ Cox model: response is Surv(year, recur)
 Terms added sequentially (first to last)
 
            loglik   Chisq Df Pr(&gt;|Chi|)    
-NULL      -567.06                          
-age       -558.29 17.5547  1  2.792e-05 ***
-sex       -553.89  8.7974  1   0.003017 ** 
-surgeon   -536.85 34.0796  9  8.650e-05 ***
-Risk      -518.67 36.3495  2  1.279e-08 ***
-pT        -513.09 11.1599  6   0.083560 .  
-size      -510.44  5.2994  1   0.021333 *  
-gross_ETE -510.27  0.3462  1   0.556248    
-pN        -505.99  8.5666  3   0.035645 *  
-ENE       -505.30  1.3668  1   0.242362    
+NULL      -566.92                          
+age       -558.16 17.5250  1  2.835e-05 ***
+sex       -553.74  8.8295  1   0.002964 ** 
+surgeon   -536.76 33.9683  9  9.047e-05 ***
+Risk      -518.58 36.3466  2  1.281e-08 ***
+pT        -512.98 11.2130  6   0.082014 .  
+size      -510.35  5.2622  1   0.021793 *  
+gross_ETE -510.17  0.3589  1   0.549118    
+pN        -505.87  8.5968  3   0.035161 *  
+ENE       -505.20  1.3423  1   0.246628    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -1274,61 +1272,62 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="multivariate-refit-2" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-refit-2">Multivariate refit 2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(time, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>size<span class="sc">+</span>pN, <span class="at">data =</span> rai_recur)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>cox_model_refit2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(year, recur) <span class="sc">~</span> age<span class="sc">+</span>sex<span class="sc">+</span>surgeon<span class="sc">+</span>Risk<span class="sc">+</span>size<span class="sc">+</span>pN, <span class="at">data =</span> rai_recur)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cox_model_refit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
-coxph(formula = Surv(time, recur) ~ age + sex + surgeon + Risk + 
+coxph(formula = Surv(year, recur) ~ age + sex + surgeon + Risk + 
     size + pN, data = rai_recur)
 
   n= 1180, number of events= 83 
 
-                     coef exp(coef) se(coef)      z Pr(&gt;|z|)    
-age              -0.01609   0.98404  0.00994 -1.619 0.105475    
-sexM              0.29893   1.34841  0.24490  1.221 0.222230    
-surgeonGS         1.73228   5.65352  1.17209  1.478 0.139425    
-surgeonKCCH       1.22647   3.40916  1.23657  0.992 0.321281    
-surgeonLBC        1.57851   4.84773  1.08200  1.459 0.144597    
-surgeonLGH        1.57315   4.82182  1.02104  1.541 0.123380    
-surgeonLMC        1.22775   3.41354  1.06454  1.153 0.248780    
-surgeonLYS        2.62356  13.78474  1.10499  2.374 0.017583 *  
-surgeonOKK        2.54183  12.70284  1.24300  2.045 0.040864 *  
-surgeonoutside    2.68467  14.65333  1.02546  2.618 0.008844 ** 
-surgeonSYS        1.53594   4.64568  1.12403  1.366 0.171794    
-RiskIntermediate -0.74345   0.47547  0.25451 -2.921 0.003488 ** 
-RiskLow          -1.61787   0.19832  0.48526 -3.334 0.000856 ***
-size              0.34859   1.41707  0.07930  4.396  1.1e-05 ***
-pNN1a             0.65242   1.92018  0.38095  1.713 0.086788 .  
-pNN1b             0.75208   2.12141  0.40952  1.836 0.066285 .  
-pNNx             -0.58592   0.55660  0.63342 -0.925 0.354967    
+                      coef exp(coef)  se(coef)      z Pr(&gt;|z|)    
+age              -0.016010  0.984117  0.009931 -1.612 0.106918    
+sexM              0.299293  1.348905  0.244916  1.222 0.221699    
+surgeonGS         1.730975  5.646156  1.172107  1.477 0.139728    
+surgeonKCCH       1.228669  3.416678  1.236608  0.994 0.320428    
+surgeonLBC        1.578026  4.845382  1.082008  1.458 0.144724    
+surgeonLGH        1.573154  4.821832  1.021021  1.541 0.123374    
+surgeonLMC        1.229570  3.419759  1.064535  1.155 0.248078    
+surgeonLYS        2.613807 13.650915  1.105025  2.365 0.018011 *  
+surgeonOKK        2.538504 12.660711  1.243011  2.042 0.041130 *  
+surgeonoutside    2.681656 14.609259  1.025482  2.615 0.008922 ** 
+surgeonSYS        1.532689  4.630614  1.124056  1.364 0.172714    
+RiskIntermediate -0.741664  0.476320  0.254500 -2.914 0.003566 ** 
+RiskLow          -1.618038  0.198287  0.485328 -3.334 0.000856 ***
+size              0.347766  1.415901  0.079285  4.386 1.15e-05 ***
+pNN1a             0.654371  1.923933  0.380997  1.718 0.085883 .  
+pNN1b             0.754514  2.126578  0.409461  1.843 0.065373 .  
+pNNx             -0.583712  0.557824  0.633290 -0.922 0.356678    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
                  exp(coef) exp(-coef) lower .95 upper .95
-age                 0.9840    1.01622   0.96505    1.0034
-sexM                1.3484    0.74161   0.83438    2.1791
-surgeonGS           5.6535    0.17688   0.56837   56.2350
-surgeonKCCH         3.4092    0.29333   0.30205   38.4785
-surgeonLBC          4.8477    0.20628   0.58149   40.4146
-surgeonLGH          4.8218    0.20739   0.65178   35.6714
-surgeonLMC          3.4135    0.29295   0.42371   27.5005
-surgeonLYS         13.7847    0.07254   1.58061  120.2185
-surgeonOKK         12.7028    0.07872   1.11136  145.1932
-surgeonoutside     14.6533    0.06824   1.96365  109.3472
-surgeonSYS          4.6457    0.21525   0.51319   42.0553
-RiskIntermediate    0.4755    2.10318   0.28872    0.7830
-RiskLow             0.1983    5.04232   0.07662    0.5134
-size                1.4171    0.70568   1.21307    1.6554
-pNN1a               1.9202    0.52079   0.91007    4.0514
-pNN1b               2.1214    0.47139   0.95069    4.7338
-pNNx                0.5566    1.79664   0.16083    1.9262
+age                 0.9841    1.01614   0.96515    1.0035
+sexM                1.3489    0.74134   0.83466    2.1800
+surgeonGS           5.6462    0.17711   0.56761   56.1633
+surgeonKCCH         3.4167    0.29268   0.30269   38.5662
+surgeonLBC          4.8454    0.20638   0.58119   40.3957
+surgeonLGH          4.8218    0.20739   0.65180   35.6703
+surgeonLMC          3.4198    0.29242   0.42448   27.5505
+surgeonLYS         13.6509    0.07326   1.56517  119.0586
+surgeonOKK         12.6607    0.07898   1.10766  144.7141
+surgeonoutside     14.6093    0.06845   1.95766  109.0235
+surgeonSYS          4.6306    0.21595   0.51149   41.9215
+RiskIntermediate    0.4763    2.09943   0.28925    0.7844
+RiskLow             0.1983    5.04318   0.07659    0.5133
+size                1.4159    0.70626   1.21212    1.6539
+pNN1a               1.9239    0.51977   0.91177    4.0597
+pNN1b               2.1266    0.47024   0.95312    4.7448
+pNNx                0.5578    1.79268   0.16123    1.9300
 
 Concordance= 0.797  (se = 0.025 )
-Likelihood ratio test= 118.1  on 17 df,   p=&lt;2e-16
-Wald test            = 119  on 17 df,   p=&lt;2e-16
-Score (logrank) test = 157.7  on 17 df,   p=&lt;2e-16</code></pre>
+Likelihood ratio test= 117.9  on 17 df,   p=&lt;2e-16
+Wald test            = 118.8  on 17 df,   p=&lt;2e-16
+Score (logrank) test = 157.5  on 17 df,   p=&lt;2e-16</code></pre>
 </div>
 </div>
+<p>``` ### psm fit 모델 만들기</p>
 
 
 </section>

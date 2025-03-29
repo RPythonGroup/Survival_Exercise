@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "R441-Survival_Exercise"
+  title: "r443-survival_exercise"
   navbar:
     left:
       - href: index.qmd
